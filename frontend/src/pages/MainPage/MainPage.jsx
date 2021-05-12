@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Authorization from '../../components/Authorization/Authorization'
 
 export default class AuthPage extends Component {
     
@@ -6,7 +7,7 @@ export default class AuthPage extends Component {
         const {isAuth} =this.props
         return (
             <div>
-                <h3>auth page</h3>
+                <Authorization/>
             </div>
         )
     }
