@@ -2,6 +2,8 @@ const db = require("../../postgres/boyarDbController");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../../config");
+
+
 const getDots = async (req, res) => {
   const dataResp = await db.getDots();
   if (dataResp.error) {

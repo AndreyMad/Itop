@@ -12,5 +12,7 @@ let client = new pg.Client(conString);
   }
   console.log("postgree connected")
 });
-
-module.exports.client= client
+const queryHandler = (queryString)=>{
+  return client.query(queryString)
+}
+module.exports.queryHandler= queryHandler
