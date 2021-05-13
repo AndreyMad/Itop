@@ -13,5 +13,7 @@ client.connect((err) => {
   console.log("postgree connected")
   return client ;
 });
-
-module.exports.client= client
+const queryHandler = (queryString)=>{
+  return client.query(queryString)
+}
+module.exports.queryHandler= queryHandler
