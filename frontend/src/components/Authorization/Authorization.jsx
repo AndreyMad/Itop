@@ -9,19 +9,17 @@ class Authorization extends Component {
     password: "",
     userName: "",
     isAdmin: false,
-    isLogin: true,
+    isLogin: false,
   };
 
-  handleChange = ({ target }) => {
-      console.log('%cAuthorization.jsx line:16 target.id', 'color: #007acc;', target.id);
-    console.log("%cAuthorization.jsx line:15 e", "color: #007acc;", target.value);
-    this.setState((prevState)=>({
-        
-        [target.id]:{...prevState[target.id]+target.tvalue}
-    }))
+  handleChange = ({ target }) => {   
+    this.setState(
+    {  [target.id]: target.value}
+    );
   };
 
-  toggleLogin = () => {
+  toggleLogin = (e) => {
+    e.preventDefault()
     this.setState((prevState) => ({
       email: "",
       password: "",
@@ -31,19 +29,30 @@ class Authorization extends Component {
   };
 
   render() {
-    const { isLogin,email,password,userName } = this.state;
+    const { isLogin, email, password, userName } = this.state;
     return (
-      <div className={style.container}>
+<>
         {isLogin ? (
-          <form className={style.form} noValidate autoComplete="off">
+          <form className={style.form}  autoComplete="off">
             <h2>Sign In</h2>
-            <TextField value={email} onChange={this.handleChange} className={style.input} id="email" label="Email" />
-            <TextField value={password} onChange={this.handleChange}
+            <div>
+            <TextField
+              autoComplete='nope'
+              value={email}
+              onChange={this.handleChange}
+              className={style.input}
+              id="email"
+              label="Email"
+            />
+            <TextField
+              autoComplete='new-password'
+              value={password}
+              onChange={this.handleChange}
               className={style.input}
               type="password"
               id="password"
               label="Password"
-            />
+            /></div>
             <button className={style.submitBtn} type="submit">
               Sign in
             </button>
@@ -59,14 +68,32 @@ class Authorization extends Component {
         ) : (
           <form className={style.form} noValidate autoComplete="off">
             <h2>Sign Up</h2>
-            <TextField onChange={this.handleChange} value={userName} className={style.input} id="userName" label="Username" />
-            <TextField onChange={this.handleChange} value={email} className={style.input} id="email" label="Email" />
-            <TextField onChange={this.handleChange} value={password}
+            <div>
+            <TextField
+              onChange={this.handleChange}
+              value={userName}
+              className={style.input}
+              id="userName"
+              label="Username"
+            />
+            <TextField
+              onChange={this.handleChange}
+              value={email}
+              className={style.input}
+              id="email"
+              label="Email"
+            />
+            <TextField
+              onChange={this.handleChange}
+              value={password}
               className={style.input}
               type="password"
               id="password"
               label="Password"
             />
+            <input type='checkbox' id='isAdmin' className={style.checkbox}></input>
+            <label for="isAdmin">Is admin?</label>
+            </div>
             <button className={style.submitBtn} type="submit">
               Sign Up
             </button>
@@ -80,7 +107,7 @@ class Authorization extends Component {
             </button>
           </form>
         )}
-      </div>
+</>
     );
   }
 }

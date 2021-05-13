@@ -1,6 +1,6 @@
  const client =  require('./index')
-console.log(client.query);
-const getDots = () => {
+
+ const getDots = () => {
     return client.query("SELECT * FROM yandexboyardots").then((res) => {
       return res.rows;
     }).catch(err=>{console.log(err)});
