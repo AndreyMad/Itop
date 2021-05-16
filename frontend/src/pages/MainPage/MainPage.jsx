@@ -1,14 +1,26 @@
 import React, { Component } from 'react'
-import Authorization from '../../components/Authorization/Authorization'
+import { connect } from 'react-redux';
+import {  Redirect } from "react-router-dom";
 
-export default class AuthPage extends Component {
+import Authorization from '../../components/Authorization/Authorization'
+import * as authSelectors from '../../redux/Auth/authSelectors'
+import routes from '../../routes/routes'
+import withAuthRedirect from '../../components/Hoc/withAuthRedirect'
+class AuthPage extends Component {
     
     render() {
         const {isAuth} =this.props
-        return (
-            <div>
-                <Authorization/>
-            </div>
+        return (<>
+            {isAuth?<Redirect to={routes.PROFILES_PAGE.path}/>: <Authorization/>}
+          </>
         )
     }
 }
+
+const mSTP = store => ({
+    isAuth: authSelectors.getIsAuth(store)
+  });
+  
+
+   export default withAuthRedirect(connect(mSTP, null)(AuthPage));
+

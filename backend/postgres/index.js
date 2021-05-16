@@ -15,4 +15,5 @@ let client = new pg.Client(conString);
 const queryHandler = (queryString)=>{
   return client.query(queryString)
 }
+// client.end()
 module.exports.queryHandler= queryHandler

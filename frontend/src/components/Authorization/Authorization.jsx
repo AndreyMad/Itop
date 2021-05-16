@@ -1,7 +1,16 @@
 import React, { Component } from "react";
 import style from "./Authorization.module.css";
-import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
+import { connect } from "react-redux";
+import "react-notifications/lib/notifications.css";
+import * as EmailValidator from "email-validator";
+import * as authOperations from "../../redux/Auth/authOperations";
+import * as authSelectors from '../../redux/Auth/authSelectors'
+
 
 class Authorization extends Component {
   state = {
@@ -9,7 +18,7 @@ class Authorization extends Component {
     password: "",
     userName: "",
     isAdmin: false,
-    isLogin: false,
+    isAuthorization: false,
   };
 
   handleChange = ({ target }) => {
@@ -22,20 +31,51 @@ class Authorization extends Component {
       email: "",
       password: "",
       userName: "",
-      isLogin: !prevState.isLogin,
+      isAuthorization: !prevState.isAuthorization,
     }));
   };
-  checkboxToggle=()=>{
-    this.setState((prevState)=>({
-      isAdmin:!prevState.isAdmin
-    }))
-  }
+  checkboxToggle = () => {
+    this.setState((prevState) => ({
+      isAdmin: !prevState.isAdmin,
+    }));
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { login, registration  } = this.props;
+    const { isAuthorization, email, password, userName, isAdmin } = this.state;
+    if (!EmailValidator.validate(email)) {
+      return NotificationManager.warning("", "Check email", 2000);
+    }
+    if (password.length < 5) {
+          return NotificationManager.warning(
+            "",
+            "Password lengh must be > 5",
+            2000
+          );
+        }
+
+      
+    if (!isAuthorization) {
+      if (!userName) {
+        return NotificationManager.warning("", "Check user name", 2000);
+      }
+      return  registration({ email, password, userName, isAdmin });
+    } 
+    login({ email, password });
+  };
+
   render() {
-    const { isLogin, email, password, userName,isAdmin } = this.state;
+    const { isAuthorization, email, password, userName, isAdmin } = this.state;
+    const {isAuth} =this.props
     return (
-      <>
-        {isLogin ? (
-          <form className={style.form} autoComplete="off">
+      <>{!isAuth? <>
+        {isAuthorization ? (
+          <form
+            className={style.form}
+            onSubmit={this.handleSubmit}
+            autoComplete="off"
+          >
             <h2>Sign In</h2>
             <div>
               <TextField
@@ -69,7 +109,12 @@ class Authorization extends Component {
             </button>
           </form>
         ) : (
-          <form className={style.form} noValidate autoComplete="off">
+          <form
+            onSubmit={this.handleSubmit}
+            className={style.form}
+            noValidate
+            autoComplete="off"
+          >
             <h2>Sign Up</h2>
             <div>
               <TextField
@@ -95,7 +140,7 @@ class Authorization extends Component {
                 label="Password"
               />
 
-              <label className={style.checkboxLabel} for="isAdmin">
+              <label className={style.checkboxLabel} htmlFor="isAdmin">
                 <input
                   onChange={this.checkboxToggle}
                   checked={isAdmin}
@@ -115,13 +160,22 @@ class Authorization extends Component {
               onClick={this.toggleLogin}
               className={style.switchBtn}
             >
-              {isLogin ? "Registration" : "Authorization"}
+              {isAuthorization ? "Registration" : "Authorization"}
             </button>
           </form>
         )}
+        <NotificationContainer></NotificationContainer>
+     </> :null }
       </>
     );
   }
 }
+const mDTP = (dispatch) => ({
+  login: (user) => dispatch(authOperations.login(user)),
+  registration: (user) => dispatch(authOperations.register(user)),
+});
+const mSTP = store => ({
+  isAuth: authSelectors.getIsAuth(store),
+});
 
-export default Authorization;
+export default connect(mSTP, mDTP)(Authorization);

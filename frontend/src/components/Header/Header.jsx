@@ -3,18 +3,32 @@ import NavBar from "../NavBar/NavBar";
 import style from "./Header.module.css";
 import userLogo from "../../assets/img/user.png";
 import adminLogo from "../../assets/img/admin.png";
-const Header = ({ isAuth, user }) => {
-  const { isAdmin, name } = user;
+import { connect } from 'react-redux'
+import * as authOperations from '../../redux/Auth/authOperations'
+import * as authSelectors from '../../redux/Auth/authSelectors'
+
+
+const Header = ({ isAuth, user,logout,  }) => {
+  console.log(user);
   return isAuth ? (
     <header className={style.container}>
       <div className={style.wrapper}>
-        <img alt="user logo" src={isAdmin ? adminLogo : userLogo}></img>
-        <span>{name}</span>
+        <img alt="user logo" src={user.isadmin? adminLogo : userLogo}></img>
+        <span>{user.username}</span>
       </div>
       <NavBar></NavBar>
-      <button className={style.logoutBtn}>Log out</button>
+      <button className={style.logoutBtn} onClick={logout}>Log out</button>
     </header>
   ) : null;
 };
 
-export default Header;
+const mDTP = dispatch => ({
+  logout: token => dispatch(authOperations.logout(token))
+ 
+});
+const mSTP = store => ({
+  isAuth: authSelectors.getIsAuth(store),
+  user: authSelectors.getUser(store)
+});
+export default connect(mSTP, mDTP)(Header);
+

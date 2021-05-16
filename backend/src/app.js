@@ -11,7 +11,6 @@ const key = fs.readFileSync("cert/private.key");
 const cert = fs.readFileSync("cert/certificate.crt");
 const ca = fs.readFileSync("cert/ca_bundle.crt");
 const config = require("../config");
-const boyarRouter = require("./boyar/boyarRouter");
 const itopRouter =require('./itop/itopRouter')
 const options = {
   key: key,
@@ -39,7 +38,6 @@ function startServer() {
   app.use(cors());
   app.use(jsonParser);
   // app.use(express.static(path.join(__dirname, "../../mypage-front/build")));
-  app.use("/boyar", boyarRouter);
   app.use("/itop", itopRouter);
 
 

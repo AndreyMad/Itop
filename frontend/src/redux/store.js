@@ -1,9 +1,14 @@
-import { createStore } from "redux";
-import reducer from "./Phonebook/reducer";
-/* eslint-disable no-underscore-dangle */
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import rootReducer from "./rootReducer";
+import { composeWithDevTools } from 'redux-devtools-extension';
+import ReduxThunk from 'redux-thunk';
+import { persistStore } from 'redux-persist';
 
-const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
-export default store;
+
+const middleware = [ReduxThunk];
+const enhancer = composeWithDevTools(applyMiddleware(...middleware));
+
+
+
+export const  store = createStore(rootReducer, enhancer);;
+export const persistore = persistStore(store);

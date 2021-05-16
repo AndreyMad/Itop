@@ -8,11 +8,16 @@ const {
   createProfile,
   updateProfile,
   deleteProfile,
+  authorization,
+  logOut,
+  checksession,
 } = require("./itopController");
 
 const router = Router();
-
-router.get("/api/getusers", getUsers);
+router.post("/api/authorization", authorization)
+router.post("/api/logout", logOut)
+router.post('/api/checksession',checksession)
+router.post("/api/getusers", getUsers);
 router.post("/api/createuser", createUser);
 router.post("/api/updateuser", updateUser);
 router.post("/api/deleteUser", deleteUser);
