@@ -9,7 +9,7 @@ import routes from '../../routes/routes';
 const withAuthRedirect = Component => {
   function WithAuthRedirect({ isAuth, ...restProps }) {
     return isAuth ? (
-      <Redirect to={routes.PROFILES_PAGE.path} />
+      <Redirect to={routes.USERS_PAGE.path} />
     ) : (
       <Component {...restProps} />
     );

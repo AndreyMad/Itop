@@ -7,9 +7,8 @@ const shortId = require("shortId");
 //auth
 const authorization = async (req, res) => {
   const user = req.body.user;
-  const userFromDB = await db.findUserFromDb(user.email);
+  const userFromDB = await db.findUserFromDb(user.email.toLowerCase());
   if (!userFromDB) {
-    console.log('Incorrect Login')
     return res
       .status(200)
       .send({ status: "ERROR", message: "Incorrect Login" });
@@ -104,7 +103,7 @@ const checksession = async (req, res) => {
       email: userLoged.email,
       id: userLoged.id,
       isadmin: true,
-      username: userLoged.username
+      name: userLoged.username
     }
   })
 }
@@ -113,7 +112,6 @@ const checksession = async (req, res) => {
 const getUsers = async (req, res) => {
 
   const dataResp = await db.getUsers(req.body.token);
-  console.log(dataResp)
   if (dataResp.error) {
     return res.status(200).send({status:"ERROR", error:dataResp.error});
   }

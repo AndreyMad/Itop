@@ -11,7 +11,7 @@ class AuthPage extends Component {
     render() {
         const {isAuth} =this.props
         return (<>
-            {isAuth?<Redirect to={routes.PROFILES_PAGE.path}/>: <Authorization/>}
+            {isAuth?<Redirect to={routes.USERS_PAGE.path}/>: <Authorization/>}
           </>
         )
     }

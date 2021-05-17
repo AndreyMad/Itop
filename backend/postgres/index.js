@@ -8,7 +8,7 @@ let client = new pg.Client(conString);
 
  client.connect((err) => {
   if (err) {
-     console.error("could not connect to postgres", err);
+  return   console.error("could not connect to postgres", err);
   }
   console.log("postgree connected")
 });
