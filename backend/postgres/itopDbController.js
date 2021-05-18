@@ -17,46 +17,48 @@ const isUserLogged = (email) => {
   );
 };
 
-const checkSession =async(token)=>{
-  return queryHandler(`SELECT * FROM sessions where token='${token}'`).then(res=>{
-   if(!res.rows){
-     return {status: "TOKEN IS NOT VALID"}
-   }
-   return res.rows[0]
-  })
-}
+const checkSession = async (token) => {
+  return queryHandler(`SELECT * FROM sessions where token='${token}'`).then(
+    (res) => {
+      if (!res.rows) {
+        return { status: "TOKEN IS NOT VALID" };
+      }
+      return res.rows[0];
+    }
+  );
+};
 
 const pushTokenToDb = async (email, token) => {
   const isLoged = await isUserLogged(email);
   const query = isLoged
     ? `update sessions set  token='${token}'  where email='${email}' `
     : `insert into sessions (email, token) VALUES ('${email}', '${token}')`;
-    return queryHandler(query).then((res) => {
-      if (res.rowCount === 0) {
-        return { status: "TOKEN NOT UPDATED" };
-      }
-      return { status: "SUCCES", token };
-    });  
+  return queryHandler(query).then((res) => {
+    if (res.rowCount === 0) {
+      return { status: "TOKEN NOT UPDATED" };
+    }
+    return { status: "SUCCES", token };
+  });
 };
 
-const deleteSession = (token)=>{
+const deleteSession = (token) => {
   const query = `DELETE FROM sessions WHERE token='${token}'`;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
       return { status: "TOKEN NOT DELETED" };
     }
     return { status: "SUCCES" };
-  });  
-}
-
-
+  });
+};
 
 //USERS
-const getUsers =async (token) => {
-  const findUserByToken =await checkSession(token)
-  const fullUserIndb = await findUserFromDb(findUserByToken.email)
-   const query = fullUserIndb.isadmin?"SELECT * FROM itoptestusers":`SELECT * FROM itoptestusers where email='${fullUserIndb.email}'`
- 
+const getUsers = async (token) => {
+  const findUserByToken = await checkSession(token);
+  const fullUserIndb = await findUserFromDb(findUserByToken.email);
+  const query = fullUserIndb.isadmin
+    ? "SELECT * FROM itoptestusers"
+    : `SELECT * FROM itoptestusers where email='${fullUserIndb.email}'`;
+
   return queryHandler(query)
     .then((res) => {
       return res.rows;
@@ -105,8 +107,14 @@ const deleteUser = (id) => {
 };
 
 //PROFILES
-const getProfiles = () => {
-  return queryHandler("SELECT * FROM itoptestprofiles")
+const getProfiles = async (token) => {
+  const findUserByToken = await checkSession(token);
+  const fullUserIndb = await findUserFromDb(findUserByToken.email);
+  const query = fullUserIndb.isadmin
+    ? "SELECT * FROM itoptestprofiles"
+    : `SELECT * FROM itoptestprofiles where useremail='${fullUserIndb.email}'`;
+
+  return queryHandler(query)
     .then((res) => {
       return res.rows;
     })
@@ -115,30 +123,41 @@ const getProfiles = () => {
     });
 };
 
-const createProfile = (user) => {
-  const { email, password, isAdmin, id } = user;
-  const query = `insert into itoptestprofiles (email, password, isadmin, id) VALUES ('${email}', '${password}', '${isAdmin}', '${id}')`;
+const createProfile = async (profile, token) => {
+  const findUserByToken = await checkSession(token);
+  if (!findUserByToken) {
+    return { status: "NOT UPDATED", message: "NO ACTIVE SESSION" };
+  }
+  const query = `insert into itoptestprofiles (id, useremail, birthdate, name, city, isgendermale) VALUES 
+  ('${profile.id}', '${findUserByToken.email}', '${profile.birthDate}', '${profile.name}', '${profile.city}', '${profile.isGenderMale}')`;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
       return { status: "NOT CREATED" };
     }
-    return { status: "SUCCES", user };
+    return { status: "SUCCES", profile:{...profile, useremail: findUserByToken.email} };
   });
 };
-const updateProfile = (userToUpdate) => {
-  const { email, password, isAdmin, id } = userToUpdate;
-  const query = `update itoptestprofiles set email='${email}', password='${password}', isAdmin='${isAdmin}' where id='${id}' `;
 
+const updateProfile = async (profile, token) => {
+  const findUserByToken = await checkSession(token);
+  if (!findUserByToken) {
+    return { status: "NOT CREATED", message: "NO ACTIVE SESSION" };
+  }
+  const query = `update itoptestprofiles set birthdate='${profile.birthDate}', name='${profile.name}', city='${profile.city}', isgendermale='${profile.isGenderMale}' where id='${profile.id}' `;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
-      console.log("%cItopDbController.js line:27 res", "color: #007acc;", res);
-      return { status: "NOT UPDATED" };
+      return { status: "ERROR", message: "NOT UPDATED" };
     }
-    return { status: "SUCCES", newUser: userToUpdate };
+    return { status: "SUCCES", profile };
   });
 };
 
-const deleteProfile = (id) => {
+const deleteProfile = async (id, token) => {
+  const findUserByToken = await checkSession(token);
+  if (!findUserByToken) {
+    return { status: "NOT DELETED", message: "NO ACTIVE SESSION" };
+  }
+
   const query = `Delete from itoptestprofiles where id = '${id}'`;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {

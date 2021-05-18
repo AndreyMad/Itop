@@ -11,22 +11,24 @@ import "./App.module.css";
 import ProtectedRoute from './ProtectedRoute/ProtectedRoute'
 import routes from "../routes/routes";
 import Header from "./Header/Header";
-import * as authSelectors from '../redux/Auth/authSelectors';
+import * as Selectors from '../redux/Selectors';
 import Loader from '../components/Loader/Loader'
 import * as authOperations from '../redux/Auth/authOperations'
+import * as usersOperations from '../redux/Users/usersOperations'
 
 
 class App extends Component {
   componentDidMount() {
-    const { refresh } = this.props;
+    const { refresh} = this.props;
     refresh();
   }
 componentDidUpdate(prevProps ){
 if(prevProps.error!==this.props.error){
   if(this.props.error){
-    NotificationManager.warning(`${this.props.error}`,'',1000)}
+    NotificationManager.warning(`${this.props.error.response?.data?.message}`,'',1000)}
   }
 }
+
   render() {
     const {isLoading, error}=this.props
     return (
@@ -63,8 +65,8 @@ if(prevProps.error!==this.props.error){
   }
 }
 const mSTP = store => ({
-  isLoading: authSelectors.getIsLoading(store),
-  error: authSelectors.getError(store)
+  isLoading: Selectors.getIsLoading(store),
+  error: Selectors.getError(store),
 });
 
 const mDTP = dispatch => ({

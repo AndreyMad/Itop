@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import * as authSelectors from '../../redux/Auth/authSelectors';
+import * as Selectors from '../../redux/Selectors';
 import routes from '../../routes/routes';
 
 const withAuthRedirect = Component => {
@@ -16,7 +16,7 @@ const withAuthRedirect = Component => {
   }
 
   const mapStateToProps = state => ({
-    isAuth: authSelectors.getIsAuth(state),
+    isAuth: Selectors.getIsAuth(state),
   });
 
   return connect(mapStateToProps)(WithAuthRedirect);

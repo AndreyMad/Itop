@@ -5,11 +5,10 @@ import userLogo from "../../assets/img/user.png";
 import adminLogo from "../../assets/img/admin.png";
 import { connect } from 'react-redux'
 import * as authOperations from '../../redux/Auth/authOperations'
-import * as authSelectors from '../../redux/Auth/authSelectors'
+import * as Selectors from '../../redux/Selectors'
 
 
 const Header = ({ isAuth, user,logout,  }) => {
-  console.log(user);
   return isAuth ? (
     <header className={style.container}>
       <div className={style.wrapper}>
@@ -27,8 +26,8 @@ const mDTP = dispatch => ({
  
 });
 const mSTP = store => ({
-  isAuth: authSelectors.getIsAuth(store),
-  user: authSelectors.getUser(store)
+  isAuth: Selectors.getIsAuth(store),
+  user: Selectors.getUser(store)
 });
 export default connect(mSTP, mDTP)(Header);
 

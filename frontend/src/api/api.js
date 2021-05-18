@@ -4,6 +4,9 @@ import axios from "axios";
 const ip = "http://localhost:80";
 
 
+export const createUser = (user) => {
+  return axios.post(`${ip}/itop/api/createuser`, { user })
+ };
 export const itopAuthorization = (user)=>{
     return axios.post(`${ip}/itop/api/authorization`, {user})
   }
@@ -14,12 +17,22 @@ export const  getUsers=(token)=> {
   return axios.post(`${ip}/itop/api/getusers`, {token});
 }
 
-export const createUser = (user) => {
-   return axios.post(`${ip}/itop/api/createuser`, { user })
-  };
-
 
 export const itopCheckSession = (token)=>{
-  console.log('check')
   return axios.post(`${ip}/itop/api/checksession`, {token})
+}
+
+export const createProfile =(profile, token)=>{
+  return axios.post(`${ip}/itop/api/createprofile`, {profile, token})
+}
+export const updateProfile =(profile, token)=>{
+  return axios.post(`${ip}/itop/api/updateprofile`, {profile, token})
+}
+export const deleteProfile =(id, token)=>{
+  
+  return axios.post(`${ip}/itop/api/deleteprofile`, {id, token})
+}
+
+export const  getProfiles=(token)=> {
+  return axios.post(`${ip}/itop/api/getprofiles`, {token});
 }

@@ -2,11 +2,10 @@ import * as usersActions from "./usersActions";
 import * as API from "../../api/api";
 
 export const getUsers = (token) => (dispatch) => {
-  dispatch(usersActions.getUsersStart());
+  dispatch(usersActions.getUsersStart(token));
 
   API.getUsers(token)
     .then((res) => {
-      console.log(res.data.users)
       if (res.data.status === "ERROR") {
         dispatch(usersActions.getUsersError(res.data.message));
       }
@@ -18,4 +17,3 @@ export const getUsers = (token) => (dispatch) => {
       dispatch(usersActions.getUsersError(err));
     });
 };
-

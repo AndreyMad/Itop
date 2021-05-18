@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {  Redirect } from "react-router-dom";
 
 import Authorization from '../../components/Authorization/Authorization'
-import * as authSelectors from '../../redux/Auth/authSelectors'
+import * as Selectors from '../../redux/Selectors'
 import routes from '../../routes/routes'
 import withAuthRedirect from '../../components/Hoc/withAuthRedirect'
 class AuthPage extends Component {
@@ -18,7 +18,7 @@ class AuthPage extends Component {
 }
 
 const mSTP = store => ({
-    isAuth: authSelectors.getIsAuth(store)
+    isAuth: Selectors.getIsAuth(store)
   });
   
 

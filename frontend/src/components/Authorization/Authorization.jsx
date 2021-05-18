@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import "react-notifications/lib/notifications.css";
 import * as EmailValidator from "email-validator";
 import * as authOperations from "../../redux/Auth/authOperations";
-import * as authSelectors from '../../redux/Auth/authSelectors'
+import * as Selectors from '../../redux/Selectors'
 
 
 class Authorization extends Component {
@@ -175,7 +175,7 @@ const mDTP = (dispatch) => ({
   registration: (user) => dispatch(authOperations.register(user)),
 });
 const mSTP = store => ({
-  isAuth: authSelectors.getIsAuth(store),
+  isAuth: Selectors.getIsAuth(store),
 });
 
 export default connect(mSTP, mDTP)(Authorization);

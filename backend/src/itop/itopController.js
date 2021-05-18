@@ -10,7 +10,7 @@ const authorization = async (req, res) => {
   const userFromDB = await db.findUserFromDb(user.email.toLowerCase());
   if (!userFromDB) {
     return res
-      .status(200)
+      .status(400)
       .send({ status: "ERROR", message: "Incorrect Login" });
   }
   const isPasswValid = bcrypt.compareSync(
@@ -19,7 +19,7 @@ const authorization = async (req, res) => {
   );
   if (!isPasswValid) {
     return res
-      .status(200)
+      .status(400)
       .send({ status: "ERROR", message: "Incorrect Password" });
   }
 
@@ -60,7 +60,7 @@ const createUser = async (req, res) => {
   };
   const dbResponse = await db.createUser(user);
   if (dbResponse.status === "ERROR" || dbResponse.status === "NOT CREATED") {
-    return res.status(202).send(dbResponse);
+    return res.status(400).send(dbResponse);
   }
 
   const session = await createSession(dbResponse.user);
@@ -77,45 +77,51 @@ const createUser = async (req, res) => {
   }
 };
 const logOut = async (req, res) => {
-  const dbResponse = await db.deleteSession(req.body.token)
-  return res.status(200).send(dbResponse)
-}
+  const dbResponse = await db.deleteSession(req.body.token);
+  return res.status(200).send(dbResponse);
+};
 
 const checksession = async (req, res) => {
-  if (!req.body.token) {
-    return res.status(400).send({ status: "NO TOKEN" })
-  }
-  const findSession = await db.checkSession(req.body.token)
-  const sessionLifeTime = + findSession.token.split('.')[0]
-  const now = new Date().getTime()
-  if (now > sessionLifeTime) {
-    db.deleteSession(req.body.token)
-    return res.status(200).send({ status: "ERROR", message: "VEEERY OLD SESSION" })
-
-  }
-  if (!findSession) {
-    return res.status(200).send({ status: "ERROR", message: "NOT VALID SESSION" })
-
-  }
-  const userLoged = await db.findUserFromDb(findSession.email)
-  return res.status(200).send({
-    status: "SUCCES", user: {
-      email: userLoged.email,
-      id: userLoged.id,
-      isadmin: true,
-      name: userLoged.username
+  try {
+    if (!req.body.token) {
+      return res.status(400).send({ status: "NO TOKEN" });
     }
-  })
-}
+    const findSession = await db.checkSession(req.body.token);
+    if (!findSession) {
+      return res
+        .status(400)
+        .send({ status: "ERROR", message: "NOT VALID SESSION" });
+    }
+    const sessionLifeTime = +findSession.token.split(".")[0];
+    const now = new Date().getTime();
+    if (now > sessionLifeTime) {
+      db.deleteSession(req.body.token);
+      return res
+        .status(400)
+        .send({ status: "ERROR", message: "VEEERY OLD SESSION" });
+    }
 
+    const userLoged = await db.findUserFromDb(findSession.email);
+    return res.status(200).send({
+      status: "SUCCES",
+      user: {
+        email: userLoged.email,
+        id: userLoged.id,
+        isadmin: true,
+        name: userLoged.username,
+      },
+    });
+  } catch (err) {
+    return res.status(500).send({ message: "SOMETHING WENT WROMG" });
+  }
+};
 
 const getUsers = async (req, res) => {
-
-  const dataResp = await db.getUsers(req.body.token);
-  if (dataResp.error) {
-    return res.status(200).send({status:"ERROR", error:dataResp.error});
+  const dbResponse = await db.getUsers(req.body.token);
+  if (dbResponse.error) {
+    return res.status(400).send({ status: "ERROR", error: dbResponse.error });
   }
-  return res.status(200).send({status:"SUCCES", users:dataResp});
+  return res.status(200).send({ status: "SUCCES", users: dbResponse });
 };
 
 const updateUser = async (req, res) => {
@@ -138,40 +144,46 @@ const deleteUser = async (req, res) => {
 //PROFILES
 
 const getProfiles = async (req, res) => {
-  const dataResp = await db.getProfiles();
-  if (dataResp.error) {
-    return res.status(200).send(dataResp);
+  const dbResponse = await db.getProfiles(req.body.token);
+  if (dbResponse.error) {
+    return res.status(400).send(dbResponse);
   }
-  return res.status(201).send(dataResp);
+  return res.status(200).send({ status: "SUCCES", profiles: dbResponse });
 };
 
 const createProfile = async (req, res) => {
-  const hashedPassword = bcrypt.hashSync(req.body.password, config.saltRounds);
-  const user = {
-    password: hashedPassword,
-    email: req.body.email,
-    isAdmin: req.body.isAdmin,
+  const profile = {
+    ...req.body.profile,
     id: shortId.generate(),
   };
-  const dbResponse = await db.createProfile(user);
-  return res.status(201).send(dbResponse);
+ 
+  const dbResponse = await db.createProfile(profile, req.body.token);
+  if (dbResponse.status !== "SUCCES") {
+    return res.status(400).send({ status: "ERROR", error: dbResponse.message });
+  }
+ 
+  return res.status(201).send({ status: "SUCCES", profile:{...dbResponse.profile}  });
 };
 
 const updateProfile = async (req, res) => {
-  const hashedPassword = bcrypt.hashSync(req.body.password, config.saltRounds);
-  const user = {
-    password: hashedPassword,
-    email: req.body.email,
-    isAdmin: req.body.isAdmin,
-    id: req.body.id,
-  };
-  const dbResponse = await db.updateProfile(user);
-  return res.status(200).send(dbResponse);
+  const dbResponse = await db.updateProfile(req.body.profile, req.body.token);
+  if (dbResponse.status !== "SUCCES") {
+    return res.status(400).send({ status: "ERROR", error: dbResponse.message });
+  }
+  return res
+    .status(201)
+    .send({ status: "SUCCES", profile: dbResponse.profile });
 };
 
 const deleteProfile = async (req, res) => {
-  const dbResponse = await db.deleteProfile(req.body.id);
-  return res.status(200).send(dbResponse);
+  const dbResponse = await db.deleteProfile(req.body.id, req.body.token);
+  console.log(dbResponse);
+  if (dbResponse.status !== "SUCCES") {
+    return res.status(400).send({ status: "ERROR", error: dbResponse.message });
+  }
+  return res
+    .status(201)
+    .send({ status: "SUCCES", id: dbResponse.id });
 };
 
 module.exports = {
@@ -185,5 +197,5 @@ module.exports = {
   updateProfile,
   deleteProfile,
   logOut,
-  checksession
+  checksession,
 };

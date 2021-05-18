@@ -1,5 +1,5 @@
-import { combineReducers } from 'redux';
-import types from './authTypes';
+import { combineReducers } from "redux";
+import types from "./Types";
 
 const user = (state = null, { type, payload }) => {
   switch (type) {
@@ -55,6 +55,11 @@ const isLoading = (state = false, { type }) => {
     case types.LOGIN_START:
     case types.LOGOUT_START:
     case types.REFRESH_START:
+    case types.CREATE_PROFILE_START:
+    case types.GET_PROFILES_START:
+    case types.GET_USERS_START:
+    case types.UPDATE_PROFILE_START:
+    case types.DELETE_PROFILE_START:
       return true;
 
     case types.REGISTRATION_ERROR:
@@ -65,6 +70,16 @@ const isLoading = (state = false, { type }) => {
     case types.LOGOUT_ERROR:
     case types.REFRESH_SUCCESS:
     case types.REFRESH_ERROR:
+    case types.UPDATE_PROFILE_SUCCESS:
+    case types.UPDATE_PROFILE_ERROR:
+    case types.GET_USERS_ERROR:
+    case types.GET_USERS_SUCCESS:
+    case types.GET_PROFILES_ERROR:
+    case types.GET_PROFILES_SUCCESS:
+    case types.CREATE_PROFILE_SUCCESS:
+    case types.CREATE_PROFILE_ERROR:
+    case types.DELETE_PROFILE_ERROR:
+    case types.DELETE_PROFILE_SUCCESS:
       return false;
 
     default:
@@ -93,10 +108,62 @@ const isAuth = (state = false, { type }) => {
   }
 };
 
+const profilesReducer = (state = [], { type, payload }) => {
+  switch (type) {
+    case types.GET_PROFILES_SUCCESS:
+      return payload.profiles;
+
+    case types.CREATE_PROFILE_SUCCESS:
+      return [...state, payload.profile];
+
+    case types.UPDATE_PROFILE_SUCCESS:
+      return [
+        ...state.map((profile) => {
+          if (profile.id === payload.profile.id) {
+            return { ...payload.profile };
+          }
+          return profile;
+        }),
+      ];
+      case types.DELETE_PROFILE_SUCCESS:
+        return [...state.filter(profile=>{
+         return profile.id!==payload.id
+        })]
+
+    case types.GET_PROFILES_ERROR:
+    case types.CREATE_PROFILE_ERROR:
+    case types.UPDATE_PROFILE_ERROR:
+    case types.DELETE_PROFILE_ERROR:
+      return state;
+
+    case types.RESET_PROFILES_STORE:
+      return [];
+
+    default:
+      return state;
+  }
+};
+
+const usersReducer = (state = [], { type, payload }) => {
+  switch (type) {
+    case types.GET_USERS_SUCCESS:
+      return payload.users;
+    case types.GET_USERS_ERROR:
+      return state;
+    case types.RESET_USERS_STORE:
+      return [];
+
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   user,
   token,
   error,
   isLoading,
   isAuth,
+  profiles: profilesReducer,
+  users: usersReducer,
 });

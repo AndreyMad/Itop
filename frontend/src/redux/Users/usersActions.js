@@ -1,4 +1,4 @@
-import types from "./usersTypes";
+import types from "../Types";
 
 export const getUsersStart = (token) => ({
   type: types.GET_USERS_START,

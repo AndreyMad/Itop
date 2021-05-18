@@ -1,7 +1,5 @@
 import { combineReducers } from 'redux';
-import authReducers from './Auth/authReducers';
-import profilesReducers from './Profiles/profilesReducers';
-import usersReducers from './Users/usersReducer';
+import Reducers from './Reducers';
 import storage from 'redux-persist/lib/storage';
 import {  persistReducer } from 'redux-persist';
 
@@ -10,10 +8,9 @@ const persistConfig = {
   storage,
   whitelist: ['token'],
 };
-const rootReducer = combineReducers({
-  auth: persistReducer(persistConfig, authReducers),
-  users: usersReducers,
-  profiles: profilesReducers
-});
+
+const rootReducer =persistReducer(persistConfig, Reducers)
+
+
 
 export default rootReducer;

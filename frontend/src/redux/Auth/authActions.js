@@ -1,4 +1,4 @@
-import types from "./authTypes";
+import types from "../Types";
 
 export const registerStart = () => ({
   type: types.REGISTRATION_START,

@@ -1,6 +1,7 @@
 import * as authActions from "./authActions";
 import * as API from "../../api/api";
 import * as usersActions from '../Users/usersActions'
+
 export const register = (user) => (dispatch) => {
   dispatch(authActions.registerStart());
 
@@ -14,7 +15,6 @@ export const register = (user) => (dispatch) => {
       }
     })
     .catch((err) => {
-      console.log(err);
       dispatch(authActions.registerError(err));
     });
 };
@@ -39,7 +39,7 @@ export const login = (user) => (dispatch) => {
 export const logout = () => (dispatch, getStore) => {
   dispatch(authActions.logoutStart());
   const store = getStore();
-  const { token } = store.auth;
+  const { token } = store;
   API.itopLogout(token)
     .then((res) => {
       dispatch(authActions.logoutSuccess());
@@ -50,7 +50,7 @@ export const logout = () => (dispatch, getStore) => {
 
 export const refresh = () => (dispatch, getStore) => {
   const store = getStore();
-  const { token } = store.auth;
+  const { token } = store;
   if (!token) {
     return;
   }
@@ -58,7 +58,11 @@ export const refresh = () => (dispatch, getStore) => {
   dispatch(authActions.refreshStart());
   API.itopCheckSession(token)
     .then((res) => {
-      dispatch(authActions.refreshSuccess(res.data));
+     if(res.data.status==="ERROR"){
+     return dispatch(authActions.refreshError(res.data.message))
+    }
+    dispatch(authActions.refreshSuccess(res.data));
     })
-    .catch((err) => dispatch(authActions.refreshError(err)));
+    .catch((err) =>dispatch(authActions.refreshError(err))
+       );
 };
