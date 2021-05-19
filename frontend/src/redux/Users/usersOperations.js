@@ -17,3 +17,20 @@ export const getUsers = (token) => (dispatch) => {
       dispatch(usersActions.getUsersError(err));
     });
 };
+
+export const updateUser = (token) => (dispatch) => {
+  // dispatch(usersActions.getUsersStart(token));
+return 'yeees'
+  API.getUsers(token)
+    .then((res) => {
+      if (res.data.status === "ERROR") {
+        dispatch(usersActions.getUsersError(res.data.message));
+      }
+      if (res.data.status === "SUCCES") {
+        dispatch(usersActions.getUsersSuccess(res.data.users));
+      }
+    })
+    .catch((err) => {
+      dispatch(usersActions.getUsersError(err));
+    });
+};

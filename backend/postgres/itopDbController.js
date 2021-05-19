@@ -109,6 +109,9 @@ const deleteUser = (id) => {
 //PROFILES
 const getProfiles = async (token) => {
   const findUserByToken = await checkSession(token);
+  if (!findUserByToken) {
+    return { status: "ERROR", message: "NO ACTIVE SESSION" };
+  }
   const fullUserIndb = await findUserFromDb(findUserByToken.email);
   const query = fullUserIndb.isadmin
     ? "SELECT * FROM itoptestprofiles"
@@ -126,14 +129,14 @@ const getProfiles = async (token) => {
 const createProfile = async (profile, token) => {
   const findUserByToken = await checkSession(token);
   if (!findUserByToken) {
-    return { status: "NOT UPDATED", message: "NO ACTIVE SESSION" };
+    return { status: "ERROR", message: "NO ACTIVE SESSION" };
   }
   const user = await findUserFromDb(findUserByToken.email);
   const query = `insert into itoptestprofiles (id, useremail, birthdate, name, city, isgendermale, username) VALUES 
   ('${profile.id}', '${findUserByToken.email}', '${profile.birthDate}', '${profile.name}', '${profile.city}', '${profile.isGenderMale}', '${user.username}')`;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
-      return { status: "NOT CREATED" };
+      return { status: "ERROR",message: "NOT CREATED" };
     }
     return { status: "SUCCES", profile:{...profile, useremail: findUserByToken.email} };
   });

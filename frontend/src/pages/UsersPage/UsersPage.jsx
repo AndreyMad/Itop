@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
-import routes from "../../routes/routes";
 import * as Selectors from "../../redux/Selectors";
 import * as usersOperations from "../../redux/Users/usersOperations";
 import * as profilesOperations from "../../redux/Profiles/profilesOperations";
 import style from "./UsersPage.module.css";
+
 class UsersPage extends Component {
   componentDidMount() {
     const { getProfiles, token, getUsers } = this.props;

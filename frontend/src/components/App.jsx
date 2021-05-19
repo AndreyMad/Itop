@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import {
   NotificationContainer,
   NotificationManager,
@@ -8,33 +8,54 @@ import {
 
 import "./App.module.css";
 
-import ProtectedRoute from './ProtectedRoute/ProtectedRoute'
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 import routes from "../routes/routes";
 import Header from "./Header/Header";
-import * as Selectors from '../redux/Selectors';
-import Loader from '../components/Loader/Loader'
-import * as authOperations from '../redux/Auth/authOperations'
-
+import * as Selectors from "../redux/Selectors";
+import Loader from "../components/Loader/Loader";
+import * as authOperations from "../redux/Auth/authOperations";
 
 class App extends Component {
   componentDidMount() {
-    const { refresh} = this.props;
+    const { refresh } = this.props;
     refresh();
   }
-componentDidUpdate(prevProps ){
-if(prevProps.error!==this.props.error){
-  if(this.props.error){
-    NotificationManager.warning(`${this.props.error.response?.data?.message}`,'',1000)}
+  componentDidUpdate(prevProps) {
+    if (prevProps.error !== this.props.error) {
+      if (this.props.error) {
+        NotificationManager.warning(
+          `${this.props.error.response?.data?.message}`,
+          "",
+          1000
+        );
+      }}
+      if (prevProps.notifications !== this.props.notifications) {
+        const { notifications } = this.props;
+        if(!!notifications){
+          switch(notifications.type){
+          case 'warning':
+            return NotificationManager.warning(`${notifications.message}`,'',2000)
+          case 'success':
+              return NotificationManager.success(`${notifications.message}`,'',2000)
+          case 'error':
+            return NotificationManager.error(`${notifications.message}`,'',2000)
+          
+          default: return null
+          }
+     
+        }
+   
+      
+    }
   }
-}
 
   render() {
-    const {isLoading, error}=this.props
+    const { isLoading, error } = this.props;
     return (
       <>
-      {isLoading?<Loader />:null}
-      <NotificationContainer></NotificationContainer>
-        <Header  />
+        {isLoading ? <Loader /> : null}
+        <NotificationContainer></NotificationContainer>
+        <Header />
         <Switch>
           <Route
             exact
@@ -50,12 +71,12 @@ if(prevProps.error!==this.props.error){
             component={routes.DASHBOARD_PAGE.component}
           />
           <ProtectedRoute
-          exact 
+            exact
             path={routes.USERS_PAGE.path}
             component={routes.USERS_PAGE.component}
           />
           <ProtectedRoute
-            exact 
+            exact
             path={routes.USERS_DETAIL_PAGE.path}
             component={routes.USERS_DETAIL_PAGE.component}
           />
@@ -69,12 +90,13 @@ if(prevProps.error!==this.props.error){
     );
   }
 }
-const mSTP = store => ({
+const mSTP = (store) => ({
   isLoading: Selectors.getIsLoading(store),
   error: Selectors.getError(store),
+  notifications: Selectors.getNotification(store),
 });
 
-const mDTP = dispatch => ({
+const mDTP = (dispatch) => ({
   refresh: () => dispatch(authOperations.refresh()),
 });
 

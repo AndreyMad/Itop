@@ -12,65 +12,53 @@ import ProfileCard from "../../components/ProfileCard/ProfileCard";
 class ProfilesPage extends Component {
   state = {
     isModalOpen: false,
-    profileToEdit:{}
+    profileToEdit: {},
   };
 
   componentDidMount() {
-    const { getProfiles, token,  getUsers } = this.props;
-
+    const { getProfiles, token, getUsers } = this.props;
   }
 
   closeModal = (e) => {
-    
     window.removeEventListener("keydown", this.closeModal);
     if (
       e?.code === "Escape" ||
-      e.target.id==="overlay"||
-      e.target.id==="closeBtn"
+      e.target.id === "overlay" ||
+      e.target.id === "closeBtn"
     ) {
       this.setState({ isModalOpen: false });
     }
   };
 
-  showModal = profile => {
-   
+  showModal = (profile) => {
     window.addEventListener("keydown", this.closeModal);
-    this.setState({ isModalOpen: true, profileToEdit:{...profile} });
+    this.setState({ isModalOpen: true, profileToEdit: { ...profile } });
   };
 
   createProfileHandler = (profile) => {
     const { createProfile, token } = this.props;
     createProfile(profile, token).then((res) => {
-      if (res === "SUCCES") {
         NotificationManager.success("", "Профиль успешно добавлен", 2000);
-        this.setState({ isModalOpen: false });
-      }
+
     });
   };
 
-  updateProfileHandler =(profile) =>{
-    const {updateProfile, token}=this.props;
+  updateProfileHandler = (profile) => {
+    const { updateProfile, token } = this.props;
     updateProfile(profile, token).then((res) => {
-      console.log(profile);
-      if (res === "SUCCES") {
-        NotificationManager.success("", "Профиль успешно изменен", 2000);
-        this.setState({ isModalOpen: false });
-      }
-    });
-  }
-deleteHandler =(id)=>{
-  const {deleteProfile, token}=this.props; 
-  deleteProfile(id, token).then((res) => {
-      
-    if (res === "SUCCES") {
-      NotificationManager.success("", "Профиль успешно изменен", 2000);
       this.setState({ isModalOpen: false });
-    }
-  });
-}
+    });
+  };
+  
+  deleteHandler = (id) => {
+    const { deleteProfile, token } = this.props;
+    deleteProfile(id, token).then((res) => {
+      this.setState({ isModalOpen: false });
+    });
+  };
 
   render() {
-    const { isModalOpen,profileToEdit } = this.state;
+    const { isModalOpen, profileToEdit } = this.state;
     const { profiles } = this.props;
     return (
       <>
@@ -90,9 +78,9 @@ deleteHandler =(id)=>{
             {profiles.map((profile) => {
               return (
                 <ProfileCard
-                deleteHandler={this.deleteHandler}
-                key={profile.id}
-                showModal={this.showModal}
+                  deleteHandler={this.deleteHandler}
+                  key={profile.id}
+                  showModal={this.showModal}
                   className={style.cardWrapper}
                   profile={profile}
                 ></ProfileCard>
@@ -115,16 +103,15 @@ deleteHandler =(id)=>{
 const mDTP = (dispatch) => ({
   getProfiles: (token) => dispatch(profilesOperations.getProfiles(token)),
   createProfile: (profile, token) =>
-  dispatch(profilesOperations.createProfile(profile, token)),
+    dispatch(profilesOperations.createProfile(profile, token)),
   updateProfile: (profile, token) =>
-  dispatch(profilesOperations.updateProfile(profile, token)),
+    dispatch(profilesOperations.updateProfile(profile, token)),
   deleteProfile: (profile, token) =>
-  dispatch(profilesOperations.deleteProfile(profile, token)),
-  
+    dispatch(profilesOperations.deleteProfile(profile, token)),
 });
 const mSTP = (store) => ({
   token: Selectors.getToken(store),
   profiles: Selectors.getProfiles(store),
-  users: Selectors.getUsers(store)
+  users: Selectors.getUsers(store),
 });
 export default connect(mSTP, mDTP)(ProfilesPage);

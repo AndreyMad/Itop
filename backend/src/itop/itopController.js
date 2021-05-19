@@ -107,7 +107,7 @@ const checksession = async (req, res) => {
       user: {
         email: userLoged.email,
         id: userLoged.id,
-        isadmin: true,
+        isAdmin: true,
         name: userLoged.username,
       },
     });

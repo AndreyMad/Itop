@@ -45,7 +45,8 @@ export const logout = () => (dispatch, getStore) => {
       dispatch(authActions.logoutSuccess());
       dispatch(usersActions.resetUsersStore())
     })
-    .catch((err) => dispatch(authActions.logoutError(err)));
+    .catch((err) => {
+      dispatch(authActions.logoutError(err))});
 };
 
 export const refresh = () => (dispatch, getStore) => {

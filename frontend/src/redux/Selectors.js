@@ -8,6 +8,8 @@ export const getUsers = store => store.users;
 
 export const getProfiles = store => store.profiles;
 
+export const getNotification = store=>store.notification
+
 // export const getFilter = store => store.users.filter;
 
 // export const filteredContacts = createSelector(

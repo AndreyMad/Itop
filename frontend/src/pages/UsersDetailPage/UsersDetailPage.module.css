@@ -1,0 +1,29 @@
+.container {
+  width: 80%;
+  margin: 0px auto;
+}
+.userContainer {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px auto;
+}
+.userContainer > h2,
+.userContainer > h3 {
+  font-size: 32px;
+  font-weight: normal;
+}
+.userContainer > h3 {
+  margin: 20px auto;
+}
+.userContainer > span {
+  font-size: 24px;
+}
+.cardContainer {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-column-gap: 20px;
+  /* padding: 0px 20px; */
+  width: 100%;
+}

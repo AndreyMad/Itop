@@ -13,7 +13,7 @@ const Header = ({ isAuth, user,logout,  }) => {
     <header className={style.container}>
       <div className={style.wrapper}>
         <img alt="user logo" src={user.isadmin? adminLogo : userLogo}></img>
-        <span>{user.username}</span>
+        <span>{user.name}</span>
       </div>
       <NavBar></NavBar>
       <button className={style.logoutBtn} onClick={logout}>Log out</button>
