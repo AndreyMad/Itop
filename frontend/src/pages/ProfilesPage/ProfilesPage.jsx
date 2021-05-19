@@ -16,8 +16,8 @@ class ProfilesPage extends Component {
   };
 
   componentDidMount() {
-    const { getProfiles, token, profiles } = this.props;
-    getProfiles(token);
+    const { getProfiles, token,  getUsers } = this.props;
+
   }
 
   closeModal = (e) => {
@@ -120,9 +120,11 @@ const mDTP = (dispatch) => ({
   dispatch(profilesOperations.updateProfile(profile, token)),
   deleteProfile: (profile, token) =>
   dispatch(profilesOperations.deleteProfile(profile, token)),
+  
 });
 const mSTP = (store) => ({
   token: Selectors.getToken(store),
   profiles: Selectors.getProfiles(store),
+  users: Selectors.getUsers(store)
 });
 export default connect(mSTP, mDTP)(ProfilesPage);

@@ -14,7 +14,6 @@ import Header from "./Header/Header";
 import * as Selectors from '../redux/Selectors';
 import Loader from '../components/Loader/Loader'
 import * as authOperations from '../redux/Auth/authOperations'
-import * as usersOperations from '../redux/Users/usersOperations'
 
 
 class App extends Component {
@@ -51,8 +50,14 @@ if(prevProps.error!==this.props.error){
             component={routes.DASHBOARD_PAGE.component}
           />
           <ProtectedRoute
+          exact 
             path={routes.USERS_PAGE.path}
             component={routes.USERS_PAGE.component}
+          />
+          <ProtectedRoute
+            exact 
+            path={routes.USERS_DETAIL_PAGE.path}
+            component={routes.USERS_DETAIL_PAGE.component}
           />
           <Route
             to={routes.ERROR_PAGE.path}

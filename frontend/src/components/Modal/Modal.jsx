@@ -7,7 +7,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import { DatePicker } from "@material-ui/pickers";
 import okBtn from "../../assets/svg/okBtn.svg";
 import cancelBtn from "../../assets/svg/cancelBtn.svg";
-import moment from 'moment';
+import moment from "moment";
 
 export default class Modal extends Component {
   state = {
@@ -15,26 +15,25 @@ export default class Modal extends Component {
     isGenderMale: true,
     birthDate: "",
     city: "",
-    id:""
+    id: "",
   };
 
   componentDidMount() {
-    const {profileToEdit}=this.props
-    if(profileToEdit.id){
+    const { profileToEdit } = this.props;
+    if (profileToEdit.id) {
       this.setState({
-        name:profileToEdit.name,
-        isGenderMale:profileToEdit.isgendermale==="false"?false:true,
-        birthDate:profileToEdit.birthDate,
-        city:profileToEdit.city,
-        id:profileToEdit.id
-      })
+        name: profileToEdit.name,
+        isGenderMale: profileToEdit.isgendermale === "false" ? false : true,
+        birthDate: profileToEdit.birthDate,
+        city: profileToEdit.city,
+        id: profileToEdit.id,
+      });
     }
   }
-  
+
   handleDateChange = (value) => {
-  
     this.setState({
-      birthDate: moment(value).format('DD.MM.YYYY'),
+      birthDate: moment(value).format("DD.MM.YYYY"),
     });
   };
 
@@ -48,23 +47,22 @@ export default class Modal extends Component {
 
   formSubmit = (e) => {
     e.preventDefault();
-    const {createProfileHandler, updateProfileHandler} =this.props
-    const user = {...this.state}
-    if(!user.id){
+    const { createProfileHandler, updateProfileHandler } = this.props;
+    const user = { ...this.state };
+    if (!user.id) {
       console.log(user);
-      createProfileHandler(user)
-      return
+      createProfileHandler(user);
+      return;
     }
-    updateProfileHandler(user)
-    
+    updateProfileHandler(user);
   };
 
   render() {
     const { closeModal } = this.props;
-    const { name, isGenderMale, birthDate, city ,id} = this.state;
+    const { name, isGenderMale, birthDate, city, id } = this.state;
 
     return (
-      <div onClick={closeModal} className={style.overlay} id='overlay'>
+      <div onClick={closeModal} className={style.overlay} id="overlay">
         <div className={style.container}>
           <form>
             <TextField
@@ -99,13 +97,13 @@ export default class Modal extends Component {
               </label>
             </div>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DatePicker
-        label="Basic example"
-        value={birthDate}
-        format="dd.MM.yyyy"
-        onChange={this.handleDateChange}
-
-      />
+              <DatePicker
+                animateYearScrolling
+                label="Basic example"
+                value={birthDate}
+                format="dd.MM.yyyy"
+                onChange={this.handleDateChange}
+              />
             </MuiPickersUtilsProvider>
 
             <TextField

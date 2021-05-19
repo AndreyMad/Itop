@@ -128,8 +128,9 @@ const createProfile = async (profile, token) => {
   if (!findUserByToken) {
     return { status: "NOT UPDATED", message: "NO ACTIVE SESSION" };
   }
-  const query = `insert into itoptestprofiles (id, useremail, birthdate, name, city, isgendermale) VALUES 
-  ('${profile.id}', '${findUserByToken.email}', '${profile.birthDate}', '${profile.name}', '${profile.city}', '${profile.isGenderMale}')`;
+  const user = await findUserFromDb(findUserByToken.email);
+  const query = `insert into itoptestprofiles (id, useremail, birthdate, name, city, isgendermale, username) VALUES 
+  ('${profile.id}', '${findUserByToken.email}', '${profile.birthDate}', '${profile.name}', '${profile.city}', '${profile.isGenderMale}', '${user.username}')`;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
       return { status: "NOT CREATED" };
