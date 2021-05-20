@@ -7,7 +7,6 @@ import DateFnsUtils from "@date-io/date-fns";
 import { DatePicker } from "@material-ui/pickers";
 import okBtn from "../../assets/svg/okBtn.svg";
 import cancelBtn from "../../assets/svg/cancelBtn.svg";
-import moment from "moment";
 
 export default class Modal extends Component {
   state = {
@@ -27,14 +26,17 @@ export default class Modal extends Component {
         birthDate: profileToEdit.birthDate,
         city: profileToEdit.city,
         id: profileToEdit.id,
+        useremail:profileToEdit.useremail,
+        username:profileToEdit.username
       });
     }
   }
 
   handleDateChange = (value) => {
     this.setState({
-      birthDate: moment(value).format("DD.MM.YYYY"),
+      birthDate:value
     });
+    // moment(value).format("DD.MM.YYYY"),
   };
 
   checkboxToggle = ({ target }) => {
@@ -50,11 +52,13 @@ export default class Modal extends Component {
     const { createProfileHandler, updateProfileHandler } = this.props;
     const user = { ...this.state };
     if (!user.id) {
-      console.log(user);
+    console.log('create');
       createProfileHandler(user);
       return;
+      console.log('afer');
     }
-    updateProfileHandler(user);
+  
+    // updateProfileHandler(user);
   };
 
   render() {

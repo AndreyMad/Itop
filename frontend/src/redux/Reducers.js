@@ -30,6 +30,7 @@ const token = (state = null, { type, payload }) => {
   }
 };
 
+
 const error = (state = null, { type, payload }) => {
   switch (type) {
     case types.REGISTRATION_SUCCESS:
@@ -48,6 +49,7 @@ const error = (state = null, { type, payload }) => {
       return state;
   }
 };
+
 
 const isLoading = (state = false, { type }) => {
   switch (type) {
@@ -87,6 +89,7 @@ const isLoading = (state = false, { type }) => {
   }
 };
 
+
 const isAuth = (state = false, { type }) => {
   switch (type) {
     case types.REGISTRATION_START:
@@ -107,6 +110,7 @@ const isAuth = (state = false, { type }) => {
       return state;
   }
 };
+
 
 const profilesReducer = (state = [], { type, payload }) => {
   switch (type) {
@@ -160,6 +164,8 @@ const usersReducer = (state = [], { type, payload }) => {
       return state;
   }
 };
+
+
 const notificationReducerInitialState =  {isVisible:false, type:'', message:''}
 const notificationReducer = (state =notificationReducerInitialState, { type, payload }) => {
   switch (type) {
@@ -199,7 +205,7 @@ const notificationReducer = (state =notificationReducerInitialState, { type, pay
     case types.GET_PROFILES_ERROR:
     case types.CREATE_PROFILE_ERROR:
     case types.DELETE_PROFILE_ERROR:
-      return {status:'error', type:'error', message: payload?.data?.error||'NO MESSAGE'};
+      return {status:'error', type:'error', message: payload.error||'NO MESSAGE'};
 
     default:
       return null;

@@ -3,17 +3,19 @@ import moment from 'moment';
 import style from './ProfileCard.module.css'
 import editSvg from '../../assets/svg/edit.svg'
 import thrashSvg from '../../assets/svg/thrash.svg'
+
 const ProfileCard = ({profile, showModal, deleteHandler}) => {
 
-    const  str = profile.birthDate;
-    // const date = moment(str);
-    // const dateComponent = date.utc().format('DD.MM.YYYY');
+   const date = moment( profile.birthDate).format("DD.MM.YYYY")
+
+   
+    // const fullFormatedDate = day.length>1?day:
 
     return (
         <div  className={style.cardWrapper}>
             <span>{profile.name}</span>
             <span>{profile.isGenderMale?"Male":"Female"}</span>
-            <span>{ profile.birthDate}</span>
+            <span>{ date}</span>
             <span>{profile.city}</span>
             <div className={style.btnWrapper}>
                 <button className={style.btnL} onClick={()=>showModal(profile)} >Edit<img className={style.svg} alt='edit button' src={editSvg}></img></button>

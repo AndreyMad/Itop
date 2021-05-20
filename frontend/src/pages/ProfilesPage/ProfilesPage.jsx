@@ -4,11 +4,9 @@ import * as profilesOperations from "../../redux/Profiles/profilesOperations";
 import * as Selectors from "../../redux/Selectors";
 import style from "./ProfilesPage.module.css";
 import Modal from "../../components/Modal/Modal";
-import {
-  NotificationContainer,
-  NotificationManager,
-} from "react-notifications";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
+
+
 class ProfilesPage extends Component {
   state = {
     isModalOpen: false,
@@ -37,10 +35,8 @@ class ProfilesPage extends Component {
 
   createProfileHandler = (profile) => {
     const { createProfile, token } = this.props;
-    createProfile(profile, token).then((res) => {
-        NotificationManager.success("", "Профиль успешно добавлен", 2000);
-
-    });
+    createProfile(profile, token)
+    this.setState({isModalOpen:false})
   };
 
   updateProfileHandler = (profile) => {
@@ -62,7 +58,6 @@ class ProfilesPage extends Component {
     const { profiles } = this.props;
     return (
       <>
-        <NotificationContainer></NotificationContainer>
         <section className={style.container}>
           {isModalOpen ? (
             <Modal

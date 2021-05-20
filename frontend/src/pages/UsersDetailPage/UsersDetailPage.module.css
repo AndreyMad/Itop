@@ -32,8 +32,8 @@
   flex-wrap: wrap;
   justify-content: flex-start;
 }
-.cardWrapper {
-  flex-basis: 320px;
+
+.addWrapper {
   height: 300px;
   border-radius: 10px;
   background-color: #fff;
@@ -44,5 +44,39 @@
   border-radius: 10px;
   border: 1px solid #d6d8e7;
   transition: 500ms;
+  min-width: 250px;
+  max-width: 320px;
   margin: 0px 40px;
+  margin-bottom: 40px;
+}
+.addBtn {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 1px solid #4e4b66;
+  background-color: #fff;
+  position: relative;
+}
+
+.addBtn:hover {
+  cursor: pointer;
+}
+.addBtn:before {
+  content: "";
+  position: absolute;
+  height: 40px;
+  width: 1px;
+  top: 15px;
+  border: 1px solid black;
+  border-left: none;
+}
+.addBtn:after {
+  content: "";
+  position: absolute;
+  height: 40px;
+  width: 1px;
+  top: 15px;
+  transform: rotate(90deg);
+  border: 1px solid black;
+  border-left: none;
 }

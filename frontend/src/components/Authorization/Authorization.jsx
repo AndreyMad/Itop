@@ -18,7 +18,7 @@ class Authorization extends Component {
     password: "",
     userName: "",
     isAdmin: false,
-    isAuthorization: false,
+    isAuthorization: true,
   };
 
   handleChange = ({ target }) => {

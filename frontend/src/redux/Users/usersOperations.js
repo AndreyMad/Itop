@@ -3,7 +3,7 @@ import * as API from "../../api/api";
 
 export const getUsers = (token) => (dispatch) => {
   dispatch(usersActions.getUsersStart(token));
-
+  
   API.getUsers(token)
     .then((res) => {
       if (res.data.status === "ERROR") {

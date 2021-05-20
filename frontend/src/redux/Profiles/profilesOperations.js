@@ -18,10 +18,10 @@ export const getProfiles = (token) => (dispatch) => {
     });
 };
 
-export const createProfile = (profile, token) => (dispatch) => {
+export const createProfile = (profile, token, email) => (dispatch) => {
   dispatch(profilesActions.createProfileStart());
 
- return  API.createProfile(profile, token)
+ return  API.createProfile(profile, token,email)
     .then((res) => {
       console.log(res)
       if (res.data.status === "ERROR") {
@@ -39,12 +39,10 @@ export const createProfile = (profile, token) => (dispatch) => {
     });
 };
 
-export const updateProfile = (profile, token) => (dispatch) => {
+export const updateProfile = (profile,token) => (dispatch) => {
   dispatch(profilesActions.updateProfileStart());
-
  return  API.updateProfile(profile, token)
     .then((res) => {
-      console.log(res)
       if (res.data.status === "ERROR") {
         dispatch(profilesActions.updateProfileError(res.data.message));
         return res.data.status

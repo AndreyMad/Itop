@@ -37,6 +37,8 @@ const authorization = async (req, res) => {
   }
 };
 
+
+
 const createSession = async (user) => {
   const token = jwt.sign(user.id, config.secret);
   const time = new Date();
@@ -45,6 +47,8 @@ const createSession = async (user) => {
   const dbResp = await db.pushTokenToDb(user.email, tokenWithExpiredTime);
   return dbResp;
 };
+
+
 
 const createUser = async (req, res) => {
   const hashedPassword = bcrypt.hashSync(
@@ -81,6 +85,8 @@ const logOut = async (req, res) => {
   return res.status(200).send(dbResponse);
 };
 
+
+
 const checksession = async (req, res) => {
   try {
     if (!req.body.token) {
@@ -89,9 +95,11 @@ const checksession = async (req, res) => {
     const findSession = await db.checkSession(req.body.token);
     if (!findSession) {
       return res
-        .status(400)
+        .status(200)
         .send({ status: "ERROR", message: "NOT VALID SESSION" });
     }
+
+
     const sessionLifeTime = +findSession.token.split(".")[0];
     const now = new Date().getTime();
     if (now > sessionLifeTime) {
@@ -116,6 +124,8 @@ const checksession = async (req, res) => {
   }
 };
 
+
+
 const getUsers = async (req, res) => {
   const dbResponse = await db.getUsers(req.body.token);
   if (dbResponse.error) {
@@ -123,6 +133,8 @@ const getUsers = async (req, res) => {
   }
   return res.status(200).send({ status: "SUCCES", users: dbResponse });
 };
+
+
 
 const updateUser = async (req, res) => {
   const hashedPassword = bcrypt.hashSync(req.body.password, config.saltRounds);
@@ -136,10 +148,14 @@ const updateUser = async (req, res) => {
   return res.status(200).send(dbResponse);
 };
 
+
+
 const deleteUser = async (req, res) => {
   const dbResponse = await db.deleteUser(req.body.id);
   return res.status(200).send(dbResponse);
 };
+
+
 
 //PROFILES
 
@@ -151,13 +167,14 @@ const getProfiles = async (req, res) => {
   return res.status(200).send({ status: "SUCCES", profiles: dbResponse });
 };
 
+
+
 const createProfile = async (req, res) => {
   const profile = {
     ...req.body.profile,
     id: shortId.generate(),
   };
- 
-  const dbResponse = await db.createProfile(profile, req.body.token);
+  const dbResponse = await db.createProfile(profile, req.body.token, req.body.email);
   if (dbResponse.status !== "SUCCES") {
     return res.status(400).send({ status: "ERROR", error: dbResponse.message });
   }
@@ -177,7 +194,6 @@ const updateProfile = async (req, res) => {
 
 const deleteProfile = async (req, res) => {
   const dbResponse = await db.deleteProfile(req.body.id, req.body.token);
-  console.log(dbResponse);
   if (dbResponse.status !== "SUCCES") {
     return res.status(400).send({ status: "ERROR", error: dbResponse.message });
   }

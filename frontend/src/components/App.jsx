@@ -21,14 +21,14 @@ class App extends Component {
     refresh();
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.error !== this.props.error) {
-      if (this.props.error) {
-        NotificationManager.warning(
-          `${this.props.error.response?.data?.message}`,
-          "",
-          1000
-        );
-      }}
+    // if (prevProps.error !== this.props.error) {
+    //   if (this.props.error) {
+    //     NotificationManager.warning(
+    //       `${this.props.error.response?.data?.message}`,
+    //       "",
+    //       1000
+    //     );
+    //   }}
       if (prevProps.notifications !== this.props.notifications) {
         const { notifications } = this.props;
         if(!!notifications){

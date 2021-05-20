@@ -59,6 +59,7 @@ export const refresh = () => (dispatch, getStore) => {
   dispatch(authActions.refreshStart());
   API.itopCheckSession(token)
     .then((res) => {
+      console.log(res)
      if(res.data.status==="ERROR"){
      return dispatch(authActions.refreshError(res.data.message))
     }
