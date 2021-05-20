@@ -14,7 +14,9 @@
 
 .addWrapper,
 .cardWrapper {
-  flex-basis: 320px;
+  /* min-width: 250px;
+  max-width: 320px;
+  flex: 320px; */
   height: 300px;
   border-radius: 10px;
   background-color: #fff;

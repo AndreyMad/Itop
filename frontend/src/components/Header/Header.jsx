@@ -12,7 +12,7 @@ const Header = ({ isAuth, user,logout,  }) => {
   return isAuth ? (
     <header className={style.container}>
       <div className={style.wrapper}>
-        <img alt="user logo" src={user.isadmin? adminLogo : userLogo}></img>
+        <img alt="user logo" src={user.isAdmin? adminLogo : userLogo}></img>
         <span>{user.name}</span>
       </div>
       <NavBar></NavBar>
