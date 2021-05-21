@@ -5,7 +5,6 @@ import {
   NotificationContainer,
   NotificationManager,
 } from "react-notifications";
-
 import "./App.module.css";
 
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
@@ -98,6 +97,7 @@ const mSTP = (store) => ({
 
 const mDTP = (dispatch) => ({
   refresh: () => dispatch(authOperations.refresh()),
+
 });
 
 export default connect(mSTP, mDTP)(App);

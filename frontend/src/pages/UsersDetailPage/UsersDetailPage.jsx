@@ -12,12 +12,13 @@ import editSvg from "../../assets/svg/edit.svg";
 import thrashSvg from "../../assets/svg/thrash.svg";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import Modal from "../../components/Modal/Modal";
-
+import UserEditModal from '../../components/UserEditModal/UserEditModal'
 class UsersDetailPage extends Component {
   state = {
     isModalOpen: false,
     profileToEdit: {},
     userPageShowwed: {},
+    isUserEditModal:false
   };
   componentWillMount() {
     const { match, users } = this.props;
@@ -69,9 +70,23 @@ class UsersDetailPage extends Component {
     deleteProfile(id, token)
   };
  
+  btnHandler = ({target})=>{
+    console.log('%cUsersDetailPage.jsx line:74 target.id', 'color: #007acc;', target.parentElement.id==='user edit');
+    if(target.parentElement.id==='user edit'){
+      console.log('%cUsersDetailPage.jsx line:76', 'color: #007acc;', 'afasfdsaf');
+     this.setState({
+        isUserEditModal:true
+      }) 
+    }
+  }
+  closeUserEditModal=()=>{
+    this.setState({
+      isUserEditModal:false
+    }) 
+  }
   render() {
     const { profiles } = this.props;
-    const { isModalOpen, profileToEdit, userPageShowwed } = this.state;
+    const { isModalOpen, profileToEdit, userPageShowwed,isUserEditModal } = this.state;
     return (
       <>
         {isModalOpen ? (
@@ -79,26 +94,30 @@ class UsersDetailPage extends Component {
             updateProfileHandler={this.updateProfileHandler}
             profileToEdit={profileToEdit}
             createProfileHandler={this.createProfileHandler}
-            closeModal={this.closeModal}
+            closeModal={this.closeUserEditModal}
             type="add profile"
           />
         ) : null}
+        {isUserEditModal? <UserEditModal/>:null}
         <section className={style.container}>
           <div className={style.userContainer}>
             <h2>{userPageShowwed.username}</h2>
             <h3>{userPageShowwed.email}</h3>
             <span>{userPageShowwed.isadmin ? "Admin" : "User"}</span>
-            <div className={style.svgWrappe}>
-              <img
+            <div className={style.svgWrapper}>
+             <button className={style.editBtn} id='user edit' onClick={this.btnHandler}>
+             <img
                 alt="edit button"
                 className={style.svgBtn}
                 src={editSvg}
               ></img>
+               </button > 
+               <button className={style.editBtn} id='user delete' onClick={this.btnHandler}>
               <img
                 alt="delete button"
                 className={style.svgBtn}
                 src={thrashSvg}
-              ></img>
+              ></img></button>
             </div>
           </div>
           <div className={style.cardContainer}>

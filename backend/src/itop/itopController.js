@@ -128,8 +128,8 @@ const checksession = async (req, res) => {
 
 const getUsers = async (req, res) => {
   const dbResponse = await db.getUsers(req.body.token);
-  if (dbResponse.error) {
-    return res.status(400).send({ status: "ERROR", error: dbResponse.error });
+  if (!dbResponse ||dbResponse.error) {
+    return res.status(200).send({ status: "ERROR", error: dbResponse.error });
   }
   return res.status(200).send({ status: "SUCCES", users: dbResponse });
 };
