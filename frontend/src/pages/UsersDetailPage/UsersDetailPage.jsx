@@ -36,11 +36,13 @@ class UsersDetailPage extends Component {
   }
 
   closeModal = (e) => {
+    console.log('%cUsersDetailPage.jsx line:39 e.target', 'color: #007acc;', e.target);
     window.removeEventListener("keydown", this.closeModal);
     if (
       e?.code === "Escape" ||
       e.target.id === "overlay" ||
-      e.target.id === "closeBtn"
+      e.target.id === "closeBtn"||
+      e.target.name ==="closeimg"
     ) {
       this.setState({ isModalOpen: false });
     }
@@ -71,18 +73,23 @@ class UsersDetailPage extends Component {
   };
  
   btnHandler = ({target})=>{
-    console.log('%cUsersDetailPage.jsx line:74 target.id', 'color: #007acc;', target.parentElement.id==='user edit');
     if(target.parentElement.id==='user edit'){
-      console.log('%cUsersDetailPage.jsx line:76', 'color: #007acc;', 'afasfdsaf');
      this.setState({
         isUserEditModal:true
       }) 
     }
   }
-  closeUserEditModal=()=>{
-    this.setState({
-      isUserEditModal:false
-    }) 
+  closeUserEditModal=(e)=>{
+    console.log('%cUsersDetailPage.jsx line:39 e.target', 'color: #007acc;', e.target);
+    window.removeEventListener("keydown", this.closeModal);
+    if (
+      e?.code === "Escape" ||
+      e.target.id === "overlay" ||
+      e.target.id === "closeBtn"||
+      e.target.name ==="closeimg"
+    ) {
+      this.setState({ isUserEditModal: false });
+    }
   }
   render() {
     const { profiles } = this.props;

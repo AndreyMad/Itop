@@ -22,7 +22,8 @@ class ProfilesPage extends Component {
     if (
       e?.code === "Escape" ||
       e.target.id === "overlay" ||
-      e.target.id === "closeBtn"
+      e.target.id === "closeBtn"||
+      e.target.name=== "closeimg"
     ) {
       this.setState({ isModalOpen: false });
     }
