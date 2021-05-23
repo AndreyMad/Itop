@@ -52,13 +52,11 @@ export default class Modal extends Component {
     const { createProfileHandler, updateProfileHandler } = this.props;
     const user = { ...this.state };
     if (!user.id) {
-    console.log('create');
+  
       createProfileHandler(user);
       return;
-      console.log('afer');
     }
-  
-    // updateProfileHandler(user);
+   updateProfileHandler(user);
   };
 
   render() {

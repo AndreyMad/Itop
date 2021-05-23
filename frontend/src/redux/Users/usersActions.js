@@ -19,3 +19,38 @@ export const getUsersError = (error) => ({
 export const resetUsersStore = () => ({
   type: types.RESET_USERS_STORE,
 });
+
+
+export const updateUserStart = () => ({
+  type: types.UPDATE_USER_START,
+
+});
+export const updateUserSuccess = (user) => ({
+  type: types.UPDATE_USER_SUCCESS,
+  payload: {
+    user,
+  },
+});
+export const updateUserError = (error) => ({
+  type: types.UPDATE_USER_ERROR,
+  payload: {
+    error,
+  },
+});
+
+export const deleteUserStart = () => ({
+  type: types.DELETE_USER_START,
+
+});
+export const deleteUserSuccess = (email) => ({
+  type: types.DELETE_USER_SUCCESS,
+  payload: {
+    email,
+  },
+});
+export const deleteUserError = (error) => ({
+  type: types.DELETE_USER_ERROR,
+  payload: {
+    error,
+  },
+});

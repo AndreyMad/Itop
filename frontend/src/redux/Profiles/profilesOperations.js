@@ -23,7 +23,6 @@ export const createProfile = (profile, token, email) => (dispatch) => {
 
  return  API.createProfile(profile, token,email)
     .then((res) => {
-      console.log(res)
       if (res.data.status === "ERROR") {
         dispatch(profilesActions.createProfileError(res.data.message));
         return res.data.status
@@ -41,6 +40,7 @@ export const createProfile = (profile, token, email) => (dispatch) => {
 
 export const updateProfile = (profile,token) => (dispatch) => {
   dispatch(profilesActions.updateProfileStart());
+
  return  API.updateProfile(profile, token)
     .then((res) => {
       if (res.data.status === "ERROR") {

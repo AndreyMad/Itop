@@ -23,8 +23,8 @@ export const login = (user) => (dispatch) => {
   dispatch(authActions.loginStart());
 
   API.itopAuthorization(user)
-    .then((res) => {
-     
+    .then((res) => {  
+     console.log(res)
       if (res.data.status === "ERROR") {
         dispatch(authActions.loginError(res.data.message));
       }

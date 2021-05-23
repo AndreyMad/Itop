@@ -10,7 +10,7 @@ const authorization = async (req, res) => {
   const userFromDB = await db.findUserFromDb(user.email.toLowerCase());
   if (!userFromDB) {
     return res
-      .status(400)
+      .status(200)
       .send({ status: "ERROR", message: "Incorrect Login" });
   }
   const isPasswValid = bcrypt.compareSync(
@@ -19,7 +19,7 @@ const authorization = async (req, res) => {
   );
   if (!isPasswValid) {
     return res
-      .status(400)
+      .status(200)
       .send({ status: "ERROR", message: "Incorrect Password" });
   }
 
@@ -86,11 +86,21 @@ const logOut = async (req, res) => {
 };
 
 
+const updateUser = async (req, res) => {
+
+const dbResponse = await db.updateUser(req.body.user, req.body.token);
+if (!dbResponse ||dbResponse.error) {
+  return res.status(200).send({ status: "ERROR", error: dbResponse.error });
+}
+return res.status(200).send({ status: "SUCCES", user: dbResponse.newUser });
+};
+
+
 
 const checksession = async (req, res) => {
   try {
     if (!req.body.token) {
-      return res.status(400).send({ status: "NO TOKEN" });
+      return res.status(200).send({ status: "NO TOKEN" });
     }
     const findSession = await db.checkSession(req.body.token);
     if (!findSession) {
@@ -98,7 +108,6 @@ const checksession = async (req, res) => {
         .status(200)
         .send({ status: "ERROR", message: "NOT VALID SESSION" });
     }
-
 
     const sessionLifeTime = +findSession.token.split(".")[0];
     const now = new Date().getTime();
@@ -136,23 +145,16 @@ const getUsers = async (req, res) => {
 
 
 
-const updateUser = async (req, res) => {
-  const hashedPassword = bcrypt.hashSync(req.body.password, config.saltRounds);
-  const user = {
-    password: hashedPassword,
-    email: req.body.email,
-    isAdmin: req.body.isAdmin,
-    id: req.body.id,
-  };
-  const dbResponse = await db.updateUser(user);
-  return res.status(200).send(dbResponse);
-};
+
 
 
 
 const deleteUser = async (req, res) => {
-  const dbResponse = await db.deleteUser(req.body.id);
-  return res.status(200).send(dbResponse);
+  const dbResponse = await db.deleteUser(req.body.userId, req.body.token);
+  if (!dbResponse ||dbResponse.error) {
+    return res.status(200).send({ status: "ERROR", error: dbResponse.error });
+  }
+  return res.status(200).send({ status: "SUCCES", email: dbResponse.email });
 };
 
 

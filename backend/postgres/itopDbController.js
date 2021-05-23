@@ -57,8 +57,8 @@ const getUsers = async (token) => {
   const findUserByToken = await checkSession(token);
   const fullUserIndb = await findUserFromDb(findUserByToken.email);
   const query = fullUserIndb.isadmin
-    ? "SELECT * FROM itoptestusers"
-    : `SELECT * FROM itoptestusers where email='${fullUserIndb.email}'`;
+    ? "SELECT id, email, isadmin, username FROM itoptestusers"
+    : `SELECT id, email, isadmin, username FROM itoptestusers where email='${fullUserIndb.email}'`;
 
   return queryHandler(query)
     .then((res) => {
@@ -84,26 +84,36 @@ const createUser = async (user) => {
   });
 };
 
-const updateUser = (userToUpdate) => {
-  const { email, password, isAdmin, id } = userToUpdate;
+const updateUser =async (user, token) => {
+  const findUserByToken = await checkSession(token);
+  if (!findUserByToken) {
+    return { status: "ERROR", message: "NO ACTIVE SESSION" };
+  }
 
-  const query = `update itoptestusers set email='${email}', password='${password}', isAdmin='${isAdmin}' where id='${id}' `;
-
+  const query = `update itoptestusers set email='${user.email}', username='${user.username}', isAdmin='${user.isadmin}' where id='${user.id}' `;
+  
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
-      return { status: "NOT UPDATED" };
+      return { status: "ERROR", message:"NOT UPDATED" };
     }
-    return { status: "SUCCES", newUser: userToUpdate };
+    return { status: "SUCCES", newUser: user };
   });
 };
 
-const deleteUser = (id) => {
-  const query = `Delete from itoptestusers where id = '${id}'`;
-  return queryHandler(query).then((res) => {
+const deleteUser =async (id,token) => {
+  const findUserByToken = await checkSession(token);
+  if (!findUserByToken) {
+    return { status: "ERROR", message: "NO ACTIVE SESSION" };
+  }
+  const query = `Delete from itoptestusers where id = '${id}' returning email`;
+  return queryHandler(query).then(async (res) => {
     if (res.rowCount === 0) {
       return { status: "NOT DELETED" };
     }
-    return { status: "SUCCES", id };
+   if(res.rows[0].email){
+    await queryHandler( `Delete from itoptestprofiles where useremail = '${res.rows[0].email}'`)
+    return { status:"SUCCES", email:res.rows[0].email}
+   }
   });
 };
 

@@ -7,6 +7,13 @@ const ip = "http://localhost:80";
 export const createUser = (user) => {
   return axios.post(`${ip}/itop/api/createuser`, { user })
  };
+ export const updateUser = (user,token) => {
+  return axios.post(`${ip}/itop/api/updateuser`, { user,token })
+ };
+ export const deleteUser = (userId,token) => {
+  return axios.post(`${ip}/itop/api/deleteuser`, { userId,token })
+ };
+
 export const itopAuthorization = (user)=>{
     return axios.post(`${ip}/itop/api/authorization`, {user})
   }

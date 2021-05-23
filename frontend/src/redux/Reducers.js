@@ -30,7 +30,6 @@ const token = (state = null, { type, payload }) => {
   }
 };
 
-
 const error = (state = null, { type, payload }) => {
   switch (type) {
     case types.REGISTRATION_SUCCESS:
@@ -42,18 +41,17 @@ const error = (state = null, { type, payload }) => {
     case types.REGISTRATION_ERROR:
     case types.LOGIN_ERROR:
     case types.LOGOUT_ERROR:
-    case types.REFRESH_ERROR:
-      return payload.error;
+      return payload.data.message;
 
     default:
       return state;
   }
 };
 
-
 const isLoading = (state = false, { type }) => {
   switch (type) {
     case types.REGISTRATION_START:
+    case types.UPDATE_USER_START:
     case types.LOGIN_START:
     case types.LOGOUT_START:
     case types.REFRESH_START:
@@ -82,13 +80,14 @@ const isLoading = (state = false, { type }) => {
     case types.CREATE_PROFILE_ERROR:
     case types.DELETE_PROFILE_ERROR:
     case types.DELETE_PROFILE_SUCCESS:
+    case types.UPDATE_USER_SUCCESS:
+    case types.UPDATE_USER_ERROR:
       return false;
 
     default:
       return state;
   }
 };
-
 
 const isAuth = (state = false, { type }) => {
   switch (type) {
@@ -110,7 +109,6 @@ const isAuth = (state = false, { type }) => {
       return state;
   }
 };
-
 
 const profilesReducer = (state = [], { type, payload }) => {
   switch (type) {
@@ -155,8 +153,25 @@ const usersReducer = (state = [], { type, payload }) => {
   switch (type) {
     case types.GET_USERS_SUCCESS:
       return payload.users;
+
+    case types.UPDATE_USER_SUCCESS:
+      return [
+        ...state.map((user) => {
+          if (user.id === payload.user.id) {
+            return payload.user;
+          }
+          return user;
+        }),
+      ];
+
+    case types.DELETE_USER_SUCCESS:
+      return state.filter((user) => user.email !== payload.email);
+
     case types.GET_USERS_ERROR:
+    case types.UPDATE_USER_START:
+    case types.UPDATE_USER_ERROR:
       return state;
+      
     case types.RESET_USERS_STORE:
       return [];
 
@@ -165,9 +180,15 @@ const usersReducer = (state = [], { type, payload }) => {
   }
 };
 
-
-const notificationReducerInitialState =  {isVisible:false, type:'', message:''}
-const notificationReducer = (state =notificationReducerInitialState, { type, payload }) => {
+const notificationReducerInitialState = {
+  isVisible: false,
+  type: "",
+  message: "",
+};
+const notificationReducer = (
+  state = notificationReducerInitialState,
+  { type, payload }
+) => {
   switch (type) {
     case types.REGISTRATION_START:
     case types.LOGIN_START:
@@ -178,23 +199,31 @@ const notificationReducer = (state =notificationReducerInitialState, { type, pay
     case types.GET_USERS_START:
     case types.UPDATE_PROFILE_START:
     case types.DELETE_PROFILE_START:
+    case types.UPDATE_USER_START:
       return state;
 
     case types.REGISTRATION_SUCCESS:
     case types.LOGIN_SUCCESS:
-      return  {isVisible:true, type:'success', message:`Hello ${payload?.data?.user?.name}!!!` }
+      return {
+        isVisible: true,
+        type: "success",
+        message: `Hello ${payload?.data?.user?.name}!!!`,
+      };
 
     case types.LOGOUT_SUCCESS:
-      return  {isVisible:true, type:'warning', message:'See you!!!' }
+      return { isVisible: true, type: "warning", message: "See you!!!" };
 
     case types.UPDATE_PROFILE_SUCCESS:
-   return  {isVisible:true, type:'success', message:'Profile updated' }
+      return { isVisible: true, type: "success", message: "Profile updated" };
+
+    case types.UPDATE_USER_SUCCESS:
+      return { isVisible: true, type: "success", message: "User updated" };
 
     case types.CREATE_PROFILE_SUCCESS:
-   return  {isVisible:true, type:'success', message:'Profile added' }
+      return { isVisible: true, type: "success", message: "Profile added" };
 
     case types.DELETE_PROFILE_SUCCESS:
-      return  {isVisible:true, type:'success', message:'Profile deleted' }
+      return { isVisible: true, type: "success", message: "Profile deleted" };
 
     case types.REGISTRATION_ERROR:
     case types.LOGIN_ERROR:
@@ -205,7 +234,12 @@ const notificationReducer = (state =notificationReducerInitialState, { type, pay
     case types.GET_PROFILES_ERROR:
     case types.CREATE_PROFILE_ERROR:
     case types.DELETE_PROFILE_ERROR:
-      return {status:'error', type:'error', message: payload.error||'NO MESSAGE'};
+    case types.UPDATE_USER_ERROR:
+      return {
+        status: "error",
+        type: "error",
+        message: payload.error || "NO MESSAGE",
+      };
 
     default:
       return null;
