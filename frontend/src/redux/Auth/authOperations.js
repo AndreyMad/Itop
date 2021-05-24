@@ -24,8 +24,8 @@ export const login = (user) => (dispatch) => {
 
   API.itopAuthorization(user)
     .then((res) => {  
-     console.log(res)
       if (res.data.status === "ERROR") {
+        console.log(res.data.message)
         dispatch(authActions.loginError(res.data.message));
       }
       if (res.data.status === "SUCCES") {
@@ -33,7 +33,7 @@ export const login = (user) => (dispatch) => {
 
       }
     })
-    .catch((err) => dispatch(authActions.loginError(err)));
+    // .catch((err) => console.log('%cauthOperations.js line:36 err', 'color: #007acc;', err));
 };
 
 export const logout = () => (dispatch, getStore) => {

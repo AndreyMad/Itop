@@ -41,7 +41,7 @@ const error = (state = null, { type, payload }) => {
     case types.REGISTRATION_ERROR:
     case types.LOGIN_ERROR:
     case types.LOGOUT_ERROR:
-      return payload.data.message;
+      return payload.error;
 
     default:
       return state;

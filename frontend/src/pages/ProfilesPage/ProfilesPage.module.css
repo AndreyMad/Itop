@@ -28,6 +28,9 @@
   border: 1px solid #d6d8e7;
   transition: 500ms;
   margin: 0px 40px;
+  flex-basis:25%;
+  max-width: 320px;
+  flex-grow: 1;
 }
 
 .addBtn {
