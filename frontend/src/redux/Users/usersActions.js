@@ -42,10 +42,11 @@ export const deleteUserStart = () => ({
   type: types.DELETE_USER_START,
 
 });
-export const deleteUserSuccess = (email) => ({
+export const deleteUserSuccess = (email, sameUser) => ({
   type: types.DELETE_USER_SUCCESS,
   payload: {
     email,
+    sameUser
   },
 });
 export const deleteUserError = (error) => ({

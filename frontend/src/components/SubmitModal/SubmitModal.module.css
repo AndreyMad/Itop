@@ -12,28 +12,20 @@
 }
 .container {
   width: 400px;
-  height: 500px;
+  height: 150px;
   background-color: #fff;
   border-radius: 15px;
-  padding: 50px 60px;
-}
-.container > form {
-  height: 100%;
+  padding: 20px;
   display: flex;
-  flex-direction: column;
-  padding-top: 20px;
-  align-content: flex-end;
-  align-items: stretch;
+  flex-wrap: wrap;
+  justify-content: center;
 }
-.container > form > div {
-  margin-top: 45px;
+.container > span {
+  width: 100%;
+  font-size: 20px;
+  text-align: center;
 }
-.btnWrapper {
-  display: flex;
-  margin-top: 70px !important;
-  justify-content: space-evenly;
-}
-.formBtn {
+.button {
   transition: 300ms;
   background-color: #eff0f6;
   width: 100px;
@@ -44,19 +36,9 @@
   justify-content: center;
   align-items: center;
 }
-.formBtn:hover {
+.button:hover {
   background-color: #e1e1e1;
   transition: 300ms;
   cursor: pointer;
   background-color: ;
-}
-.checkboxWrapper {
-  display: flex;
-  flex-wrap: wrap;
-}
-.checkboxWrapper > span {
-  width: 100%;
-}
-.checkboxWrapper label:first-of-type {
-  margin-right: auto;
 }

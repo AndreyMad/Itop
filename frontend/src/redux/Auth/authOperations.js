@@ -1,6 +1,7 @@
 import * as authActions from "./authActions";
 import * as API from "../../api/api";
 import * as usersActions from '../Users/usersActions'
+import * as profilesActions from '../Profiles/profilesActions'
 
 export const register = (user) => (dispatch) => {
   dispatch(authActions.registerStart());
@@ -44,6 +45,7 @@ export const logout = () => (dispatch, getStore) => {
     .then((res) => {
       dispatch(authActions.logoutSuccess());
       dispatch(usersActions.resetUsersStore())
+      dispatch(profilesActions.resetProfilesStore())
     })
     .catch((err) => {
       dispatch(authActions.logoutError(err))});
@@ -59,7 +61,6 @@ export const refresh = () => (dispatch, getStore) => {
   dispatch(authActions.refreshStart());
   API.itopCheckSession(token)
     .then((res) => {
-      console.log(res)
      if(res.data.status==="ERROR"){
      return dispatch(authActions.refreshError(res.data.message))
     }

@@ -9,14 +9,19 @@
   border-radius: 10px;
   border: 1px solid #d6d8e7;
   transition: 500ms;
-flex-basis:25%;
-max-width: 320px;
-flex-grow: 1;
+  flex-basis: 25%;
+  max-width: 320px;
+  flex-grow: 1;
   margin: 0px 40px;
   margin-bottom: 40px;
   padding-top: 25px;
 }
-.cardWrapper span{
+.cardWrapper:hover {
+  box-shadow: 0px 0px 10px 15px rgba(214, 216, 231, 0.31);
+  transition: 500ms;
+  transform: translate(-3px, -3px);
+}
+.cardWrapper span {
   margin: 20px auto 0px;
   margin-top: 20px;
 }

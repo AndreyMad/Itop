@@ -7,7 +7,9 @@ import DateFnsUtils from "@date-io/date-fns";
 import { DatePicker } from "@material-ui/pickers";
 import okBtn from "../../assets/svg/okBtn.svg";
 import cancelBtn from "../../assets/svg/cancelBtn.svg";
-
+import {  NotificationContainer,
+  NotificationManager,} from 'react-notifications'
+  
 export default class Modal extends Component {
   state = {
     name: "",
@@ -18,16 +20,17 @@ export default class Modal extends Component {
   };
 
   componentDidMount() {
+    
     const { profileToEdit } = this.props;
+     
     if (profileToEdit.id) {
       this.setState({
         name: profileToEdit.name,
-        isGenderMale: profileToEdit.isgendermale === "false" ? false : true,
+        isGenderMale: profileToEdit.isGenderMale,
         birthDate: profileToEdit.birthDate,
         city: profileToEdit.city,
         id: profileToEdit.id,
-        useremail:profileToEdit.useremail,
-        username:profileToEdit.username
+        userEmail:profileToEdit.userEmail,
       });
     }
   }
@@ -36,7 +39,6 @@ export default class Modal extends Component {
     this.setState({
       birthDate:value
     });
-    // moment(value).format("DD.MM.YYYY"),
   };
 
   checkboxToggle = ({ target }) => {
@@ -51,8 +53,12 @@ export default class Modal extends Component {
     e.preventDefault();
     const { createProfileHandler, updateProfileHandler } = this.props;
     const user = { ...this.state };
+
+    if(!user.name||!user.birthDate||!user.city){
+      NotificationManager.warning('','Please check form', 2000)
+      return
+    }
     if (!user.id) {
-  
       createProfileHandler(user);
       return;
     }
@@ -64,6 +70,7 @@ export default class Modal extends Component {
     const { name, isGenderMale, birthDate, city, id } = this.state;
 
     return (
+      <><NotificationContainer/>
       <div onClick={closeModal} className={style.overlay} id="overlay">
         <div className={style.container}>
           <form>
@@ -101,7 +108,7 @@ export default class Modal extends Component {
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <DatePicker
                 animateYearScrolling
-                label="Basic example"
+                label="Select date"
                 value={birthDate}
                 format="dd.MM.yyyy"
                 onChange={this.handleDateChange}
@@ -143,6 +150,7 @@ export default class Modal extends Component {
           </form>
         </div>
       </div>
+      </>
     );
   }
 }

@@ -9,8 +9,13 @@ import style from "./UsersPage.module.css";
 class UsersPage extends Component {
   componentDidMount() {
     const { getProfiles, token, getUsers } = this.props;
-    getProfiles(token);
-    getUsers(token);
+    if(token){
+   
+      getProfiles(token);
+      getUsers(token);
+   
+    }
+  
   }
 
   render() {
@@ -20,8 +25,8 @@ class UsersPage extends Component {
         <h1>{users.length >= 1 ? "User:" : "Users:"}</h1>
         <ul className={style.cardContainer}>
           {users.map((user) => {
-            const userProfiles = profiles.filter(
-              (el) => el.useremail === user.email
+            const userProfiles = profiles?.filter(
+              (el) => el.userEmail === user.email
             );
             const { match, location } = this.props;
 

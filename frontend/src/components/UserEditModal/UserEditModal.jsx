@@ -3,13 +3,13 @@ import TextField from "@material-ui/core/TextField";
 import style from "./UserEditModal.module.css";
 import okBtn from "../../assets/svg/okBtn.svg";
 import cancelBtn from "../../assets/svg/cancelBtn.svg";
-import { isThisISOWeek } from "date-fns";
 
 class UserEditModal extends Component {
   state = {
     username: "",
     email: "",
     isadmin: false,
+ 
   };
   componentDidMount() {
     this.setState({
@@ -34,6 +34,9 @@ class UserEditModal extends Component {
     const { updateUserHandler } = this.props;
     updateUserHandler({ ...this.state });
   };
+
+
+
   render() {
     const { username, email,  isadmin } = this.state;
     const {closeUserEditModal}=this.props
@@ -52,6 +55,7 @@ class UserEditModal extends Component {
             <TextField
               value={email}
               className={style.input}
+              onChange={this.handleInputChange}
               type="text"
               id="email"
               label="Email"

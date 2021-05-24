@@ -21,7 +21,7 @@ export const getProfiles = (token) => (dispatch) => {
 export const createProfile = (profile, token, email) => (dispatch) => {
   dispatch(profilesActions.createProfileStart());
 
- return  API.createProfile(profile, token,email)
+ return  API.createProfile(profile, token, email)
     .then((res) => {
       if (res.data.status === "ERROR") {
         dispatch(profilesActions.createProfileError(res.data.message));

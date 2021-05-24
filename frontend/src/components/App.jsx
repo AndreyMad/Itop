@@ -20,14 +20,6 @@ class App extends Component {
     refresh();
   }
   componentDidUpdate(prevProps) {
-    // if (prevProps.error !== this.props.error) {
-    //   if (this.props.error) {
-    //     NotificationManager.warning(
-    //       `${this.props.error.response?.data?.message}`,
-    //       "",
-    //       1000
-    //     );
-    //   }}
       if (prevProps.notifications !== this.props.notifications) {
         const { notifications } = this.props;
         if(!!notifications){
@@ -49,7 +41,7 @@ class App extends Component {
   }
 
   render() {
-    const { isLoading, error } = this.props;
+    const { isLoading } = this.props;
     return (
       <>
         {isLoading ? <Loader /> : null}
@@ -93,10 +85,12 @@ const mSTP = (store) => ({
   isLoading: Selectors.getIsLoading(store),
   error: Selectors.getError(store),
   notifications: Selectors.getNotification(store),
+  
 });
 
 const mDTP = (dispatch) => ({
   refresh: () => dispatch(authOperations.refresh()),
+
 
 });
 

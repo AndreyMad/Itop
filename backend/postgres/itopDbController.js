@@ -18,9 +18,8 @@ const isUserLogged = (email) => {
 };
 
 const checkSession = async (token) => {
-    return queryHandler(`SELECT * FROM sessions where token='${token}'`).then(
+  return queryHandler(`SELECT * FROM sessions where token='${token}'`).then(
     (res) => {
-  
       if (res.rowCount === 0) {
         return null;
       }
@@ -71,6 +70,7 @@ const getUsers = async (token) => {
 
 const createUser = async (user) => {
   const { email, password, isAdmin, id, userName } = user;
+
   const checkSameUser = await findUserFromDb(email);
   if (checkSameUser) {
     return { status: "ERROR", message: "That email allready registered" };
@@ -84,23 +84,29 @@ const createUser = async (user) => {
   });
 };
 
-const updateUser =async (user, token) => {
+const updateUser = async (user, token) => {
   const findUserByToken = await checkSession(token);
   if (!findUserByToken) {
     return { status: "ERROR", message: "NO ACTIVE SESSION" };
   }
 
+  //обновляем емаил полльзователя в сессии если обновляемый пользователь залогинен
+  const isLoged = await checkSession(token);
+  if(isLoged){
+    queryHandler(`update sessions set  email='${user.email}'  where token='${token}' `)
+  }
+
   const query = `update itoptestusers set email='${user.email}', username='${user.username}', isAdmin='${user.isadmin}' where id='${user.id}' `;
-  
+
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
-      return { status: "ERROR", message:"NOT UPDATED" };
+      return { status: "ERROR", message: "NOT UPDATED" };
     }
     return { status: "SUCCES", newUser: user };
   });
 };
 
-const deleteUser =async (id,token) => {
+const deleteUser = async (id, token) => {
   const findUserByToken = await checkSession(token);
   if (!findUserByToken) {
     return { status: "ERROR", message: "NO ACTIVE SESSION" };
@@ -110,10 +116,20 @@ const deleteUser =async (id,token) => {
     if (res.rowCount === 0) {
       return { status: "NOT DELETED" };
     }
-   if(res.rows[0].email){
-    await queryHandler( `Delete from itoptestprofiles where useremail = '${res.rows[0].email}'`)
-    return { status:"SUCCES", email:res.rows[0].email}
-   }
+
+    if (res.rows[0].email) {
+      const sameUser = await queryHandler(
+        `DELETE FROM sessions WHERE email='${res.rows[0].email}'`
+      );
+      await queryHandler(
+        `Delete from itoptestprofiles where useremail = '${res.rows[0].email}'`
+      );
+      return {
+        status: "SUCCES",
+        email: res.rows[0].email,
+        sameUser: !!sameUser.rowCount,
+      };
+    }
   });
 };
 
@@ -144,12 +160,19 @@ const createProfile = async (profile, token, email) => {
   }
   const user = await findUserFromDb(findUserByToken.email);
   const query = `insert into itoptestprofiles (id, useremail, birthdate, name, city, isgendermale, username) VALUES 
-  ('${profile.id}', '${email||findUserByToken.email}', '${profile.birthDate}', '${profile.name}', '${profile.city}', '${profile.isGenderMale}', '${user.username}')`;
+  ('${profile.id}', '${email || findUserByToken.email}', '${
+    profile.birthDate
+  }', '${profile.name}', '${profile.city}', '${profile.isGenderMale}', '${
+    user.username
+  }')`;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
-      return { status: "ERROR",message: "NOT CREATED" };
+      return { status: "ERROR", message: "NOT CREATED" };
     }
-    return { status: "SUCCES", profile:{...profile, useremail: email||findUserByToken.email} };
+    return {
+      status: "SUCCES",
+      profile: { ...profile, userEmail: email || findUserByToken.email },
+    };
   });
 };
 

@@ -3,12 +3,16 @@ import { connect } from "react-redux";
 import * as Selectors from "../../redux/Selectors";
 import * as usersOperations from "../../redux/Users/usersOperations";
 import * as profilesOperations from "../../redux/Profiles/profilesOperations";
+import * as authOperations from "../../redux/Auth/authOperations";
 import style from "./UsersDetailPage.module.css";
 import editSvg from "../../assets/svg/edit.svg";
 import thrashSvg from "../../assets/svg/thrash.svg";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import Modal from "../../components/Modal/Modal";
 import UserEditModal from "../../components/UserEditModal/UserEditModal";
+import SubmitModal from "../../components/SubmitModal/SubmitModal";
+import { NavLink, Redirect } from "react-router-dom";
+import routes from "../../routes/routes";
 
 class UsersDetailPage extends Component {
   state = {
@@ -16,7 +20,9 @@ class UsersDetailPage extends Component {
     profileToEdit: {},
     userPageShowwed: {},
     isUserEditModal: false,
+    isSudmitShown: false,
   };
+
   componentWillMount() {
     const { match, users } = this.props;
 
@@ -24,9 +30,11 @@ class UsersDetailPage extends Component {
       userPageShowwed: users.find((user) => user.id === match.params.id),
     });
   }
+
   componentDidUpdate(prevProps, prevState) {
     if (this.props.users !== prevProps.users) {
       const { match, users } = this.props;
+
       this.setState({
         userPageShowwed: users.find((user) => user.id === match.params.id),
       });
@@ -96,19 +104,42 @@ class UsersDetailPage extends Component {
     });
   };
 
-  deleteUserHandler = () => {
+  deleteUser = () => {
     const { deleteUser, token } = this.props;
     const { userPageShowwed } = this.state;
     deleteUser(userPageShowwed.id, token);
   };
+
+  deleteUserSubmit = () => {
+    this.setState({
+      isSudmitShown: true,
+    });
+  };
+  closeSubmitModal = () => {
+    this.setState({
+      isSudmitShown: false,
+    });
+  };
+
   render() {
     const { profiles } = this.props;
-    const { isModalOpen, profileToEdit, userPageShowwed, isUserEditModal } =
-      this.state;
+    const {
+      isModalOpen,
+      isSudmitShown,
+      profileToEdit,
+      userPageShowwed,
+      isUserEditModal,
+    } = this.state;
     return (
       <>
         {userPageShowwed ? (
           <>
+            {isSudmitShown ? (
+              <SubmitModal
+                submit={this.deleteUser}
+                cancel={this.closeSubmitModal}
+              />
+            ) : null}
             {isModalOpen ?? isUserEditModal ? (
               <Modal
                 updateProfileHandler={this.updateProfileHandler}
@@ -145,7 +176,7 @@ class UsersDetailPage extends Component {
                   <button
                     className={style.editBtn}
                     id="user delete"
-                    onClick={this.deleteUserHandler}
+                    onClick={this.deleteUserSubmit}
                   >
                     <img
                       alt="delete button"
@@ -157,7 +188,7 @@ class UsersDetailPage extends Component {
               </div>
               <div className={style.cardContainer}>
                 {profiles.map((profile) => {
-                  if (profile.useremail === userPageShowwed?.email) {
+                  if (profile.userEmail === userPageShowwed?.email) {
                     return (
                       <ProfileCard
                         deleteHandler={this.deleteHandler}
@@ -180,10 +211,7 @@ class UsersDetailPage extends Component {
             </section>
           </>
         ) : (
-          <div className={style.deletedContainer}>
-            <h3>Удалено</h3>
-            
-          </div>
+          <NavLink className={style.userPageLink} to={routes.USERS_PAGE.path} >Back to users</NavLink>
         )}
       </>
     );
@@ -201,6 +229,7 @@ const mDTP = (dispatch) => ({
     dispatch(profilesOperations.createProfile(profile, token, user)),
   deleteUser: (userId, token) =>
     dispatch(usersOperations.deleteUser(userId, token)),
+  logout: (token) => dispatch(authOperations.logout(token)),
 });
 
 const mSTP = (store) => ({
@@ -211,19 +240,3 @@ const mSTP = (store) => ({
 });
 
 export default connect(mSTP, mDTP)(UsersDetailPage);
-
-// const mDTP = (dispatch) => ({
-//   getProfiles: (token) => dispatch(profilesOperations.getProfiles(token)),
-//   createProfile: (profile, token) =>
-//     dispatch(profilesOperations.createProfile(profile, token)),
-//   updateProfile: (profile, token) =>
-//     dispatch(profilesOperations.updateProfile(profile, token)),
-//   deleteProfile: (profile, token) =>
-//     dispatch(profilesOperations.deleteProfile(profile, token)),
-// });
-// const mSTP = (store) => ({
-//   token: Selectors.getToken(store),
-//   profiles: Selectors.getProfiles(store),
-//   users: Selectors.getUsers(store),
-// });
-// export default connect(mSTP, mDTP)(ProfilesPage);

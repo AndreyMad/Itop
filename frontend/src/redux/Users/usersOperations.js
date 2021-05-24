@@ -1,5 +1,7 @@
 import * as usersActions from "./usersActions";
 import * as API from "../../api/api";
+import * as authOperations from '../Auth/authOperations'
+import * as authActions from '../Auth/authActions'
 
 export const getUsers = (token) => (dispatch) => {
   dispatch(usersActions.getUsersStart(token));
@@ -42,10 +44,13 @@ export const deleteUser = (userId,token) => (dispatch) => {
 
   API.deleteUser(userId, token)
     .then((res) => {
- 
+
       if (res.data.status === "ERROR") {
         dispatch(usersActions.deleteUserError(res.data.message));
       }
+       if(!!res.data.sameUser){
+          dispatch(authOperations.logout());
+        }
       if (res.data.status === "SUCCES") {
         dispatch(usersActions.deleteUserSuccess(res.data.email));
       }

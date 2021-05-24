@@ -171,7 +171,7 @@ const usersReducer = (state = [], { type, payload }) => {
     case types.UPDATE_USER_START:
     case types.UPDATE_USER_ERROR:
       return state;
-      
+
     case types.RESET_USERS_STORE:
       return [];
 
@@ -224,6 +224,9 @@ const notificationReducer = (
 
     case types.DELETE_PROFILE_SUCCESS:
       return { isVisible: true, type: "success", message: "Profile deleted" };
+
+    case types.DELETE_USER_SUCCESS:
+      return { isVisible: true, type: "success", message: "User deleted" };
 
     case types.REGISTRATION_ERROR:
     case types.LOGIN_ERROR:

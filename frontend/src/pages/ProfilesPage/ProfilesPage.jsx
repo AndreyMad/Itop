@@ -13,9 +13,6 @@ class ProfilesPage extends Component {
     profileToEdit: {},
   };
 
-  componentDidMount() {
-    const { getProfiles, token, getUsers } = this.props;
-  }
 
   closeModal = (e) => {
     window.removeEventListener("keydown", this.closeModal);
@@ -43,7 +40,7 @@ class ProfilesPage extends Component {
   updateProfileHandler = (profile) => {
     const { updateProfile, token } = this.props;
     updateProfile(profile, token).then((res) => {
-      this.setState({ isModalOpen: false });
+      this.setState({ isModalOpen: false ,profileToEdit:{}});
     });
   };
   
@@ -66,7 +63,7 @@ class ProfilesPage extends Component {
               profileToEdit={profileToEdit}
               createProfileHandler={this.createProfileHandler}
               closeModal={this.closeModal}
-              type="add profile"
+             
             />
           ) : null}
           <h2>Profiles:</h2>

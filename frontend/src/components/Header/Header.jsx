@@ -15,7 +15,7 @@ const Header = ({ isAuth, user,logout,  }) => {
         <img alt="user logo" src={user.isAdmin? adminLogo : userLogo}></img>
         <span>{user.name}</span>
       </div>
-      <NavBar></NavBar>
+     {user.isAdmin?<NavBar></NavBar>:null } 
       <button className={style.logoutBtn} onClick={logout}>Log out</button>
     </header>
   ) : null;
