@@ -56,8 +56,8 @@ const getUsers = async (token) => {
   const findUserByToken = await checkSession(token);
   const fullUserIndb = await findUserFromDb(findUserByToken.email);
   const query = fullUserIndb.isadmin
-    ? "SELECT id, email, isadmin, id FROM itoptestusers"
-    : `SELECT id, email, isadmin, id FROM itoptestusers where email='${fullUserIndb.id}'`;
+    ? "SELECT id, email, isadmin, username FROM itoptestusers"
+    : `SELECT id, email, isadmin, username FROM itoptestusers where id='${fullUserIndb.id}'`;
 
   return queryHandler(query)
     .then((res) => {
@@ -65,23 +65,23 @@ const getUsers = async (token) => {
     })
     .catch((err) => {
       console.log(err);
-      return err
+      return err;
     });
 };
 
 const createUser = async (user) => {
-  const { email, password, isAdmin, id, userId } = user;
+  const { email, password, isAdmin, id, userName } = user;
 
   const checkSameUser = await findUserFromDb(email);
   if (checkSameUser) {
     return { status: "ERROR", message: "That email allready registered" };
   }
-  const query = `insert into itoptestusers (email, password, isadmin, id, userid) VALUES ('${email}', '${password}', '${isAdmin}', '${id}', '${userId}')`;
+  const query = `insert into itoptestusers (email, password, isadmin, id, username) VALUES ('${email}', '${password}', '${isAdmin}', '${id}','${userName}')`;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
       return { status: "NOT CREATED" };
     }
-    return { status: "SUCCES", user: { email, isAdmin, id, userId } };
+    return { status: "SUCCES", user: { email, isAdmin, id, userName } };
   });
 };
 
@@ -93,17 +93,20 @@ const updateUser = async (user, token) => {
 
   //обновляем емаил полльзователя в сессии если обновляемый пользователь залогинен
   const isLoged = await checkSession(token);
-  if(isLoged){
-    queryHandler(`update sessions set  email='${user.email}'  where token='${token}' `)
+  if (isLoged) {
+    queryHandler(
+      `update sessions set  email='${user.email}'  where token='${token}' `
+    );
   }
 
-  const query = `update itoptestusers set email='${user.email}', userid='${user.userId}', isAdmin='${user.isadmin}' where id='${user.id}' `;
+  const query = `update itoptestusers set email='${user.email}', username='${user.username}', isadmin='${user.isadmin}' where id='${user.id}' returning *`;
 
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
       return { status: "ERROR", message: "NOT UPDATED" };
     }
-    return { status: "SUCCES", newUser: user };
+    
+    return { status: "SUCCES", newUser: res.rows[0] };
   });
 };
 
@@ -112,7 +115,7 @@ const deleteUser = async (id, token) => {
   if (!findUserByToken) {
     return { status: "ERROR", message: "NO ACTIVE SESSION" };
   }
-  const query = `Delete from itoptestusers where id = '${id}' returning email`;
+  const query = `Delete from itoptestusers where id = '${id}' returning email, id`;
   return queryHandler(query).then(async (res) => {
     if (res.rowCount === 0) {
       return { status: "NOT DELETED" };
@@ -123,7 +126,7 @@ const deleteUser = async (id, token) => {
         `DELETE FROM sessions WHERE email='${res.rows[0].email}'`
       );
       await queryHandler(
-        `Delete from itoptestprofiles where useremail = '${res.rows[0].email}'`
+        `Delete from itoptestprofiles where userid = '${res.rows[0].id}'`
       );
       return {
         status: "SUCCES",
@@ -143,7 +146,7 @@ const getProfiles = async (token) => {
   const fullUserIndb = await findUserFromDb(findUserByToken.email);
   const query = fullUserIndb.isadmin
     ? "SELECT * FROM itoptestprofiles"
-    : `SELECT * FROM itoptestprofiles where useremail='${fullUserIndb.email}'`;
+    : `SELECT * FROM itoptestprofiles where userid='${fullUserIndb.id}'`;
 
   return queryHandler(query)
     .then((res) => {
@@ -154,25 +157,22 @@ const getProfiles = async (token) => {
     });
 };
 
-const createProfile = async (profile, token, email) => {
+const createProfile = async (profile, token, creatorId) => {
+
   const findUserByToken = await checkSession(token);
   if (!findUserByToken) {
     return { status: "ERROR", message: "NO ACTIVE SESSION" };
   }
   const user = await findUserFromDb(findUserByToken.email);
-  const query = `insert into itoptestprofiles (id, useremail, birthdate, name, city, isgendermale, userid) VALUES 
-  ('${profile.id}', '${email || findUserByToken.email}', '${
-    profile.birthDate
-  }', '${profile.name}', '${profile.city}', '${profile.isGenderMale}', '${
-    user.userId
-  }')`;
+  const query = `insert into itoptestprofiles (id, birthdate, name, city, isgendermale, userid) VALUES 
+  ('${profile.id}', '${profile.birthDate}', '${profile.name}', '${profile.city}', '${profile.isGenderMale}', '${creatorId||user.id}')`;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
       return { status: "ERROR", message: "NOT CREATED" };
     }
     return {
       status: "SUCCES",
-      profile: { ...profile, userEmail: email || findUserByToken.email },
+      profile: { ...profile, userId: creatorId || findUserByToken.id },
     };
   });
 };
@@ -182,12 +182,13 @@ const updateProfile = async (profile, token) => {
   if (!findUserByToken) {
     return { status: "NOT CREATED", message: "NO ACTIVE SESSION" };
   }
-  const query = `update itoptestprofiles set birthdate='${profile.birthDate}', name='${profile.name}', city='${profile.city}', isgendermale='${profile.isGenderMale}' where id='${profile.id}' `;
+  const query = `update itoptestprofiles set birthdate='${profile.birthDate}', name='${profile.name}', city='${profile.city}', isgendermale='${profile.isGenderMale}' where id='${profile.id}' returning * `;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
       return { status: "ERROR", message: "NOT UPDATED" };
     }
-    return { status: "SUCCES", profile };
+   
+    return { status: "SUCCES", profile: res.rows[0] };
   });
 };
 

@@ -29,8 +29,8 @@ export const itopCheckSession = (token)=>{
   return axios.post(`${ip}/itop/api/checksession`, {token})
 }
 
-export const createProfile =(profile, token,email)=>{
-  return axios.post(`${ip}/itop/api/createprofile`, {profile, token,email})
+export const createProfile =(profile, token,creatorId)=>{
+  return axios.post(`${ip}/itop/api/createprofile`, {profile, token,creatorId})
 }
 export const updateProfile =(profile, token)=>{
   return axios.post(`${ip}/itop/api/updateprofile`, {profile, token})

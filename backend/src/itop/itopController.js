@@ -152,10 +152,10 @@ const deleteUser = async (req, res) => {
 
 const getProfiles = async (req, res) => {
   const dbResponse = await db.getProfiles(req.body.token);
+  
   if (dbResponse.error) {
     return res.status(200).send(dbResponse);
   }
-
   return res
     .status(200)
     .send({
@@ -182,7 +182,7 @@ const createProfile = async (req, res) => {
   const dbResponse = await db.createProfile(
     profile,
     req.body.token,
-    req.body.email
+    req.body.creatorId
   );
   if (dbResponse.status !== "SUCCES") {
     return res.status(400).send({ status: "ERROR", error: dbResponse.message });
@@ -200,7 +200,14 @@ const updateProfile = async (req, res) => {
   }
   return res
     .status(201)
-    .send({ status: "SUCCES", profile: dbResponse.profile });
+    .send({ status: "SUCCES", profile: {
+       birthDate: dbResponse.profile.birthdate,
+      city: dbResponse.profile.city,
+      id: dbResponse.profile.id,
+      isGenderMale: dbResponse.profile.isgendermale,
+      name: dbResponse.profile.name,
+      userId: dbResponse.profile.userid,
+      userName: dbResponse.profile.username} });
 };
 
 const deleteProfile = async (req, res) => {

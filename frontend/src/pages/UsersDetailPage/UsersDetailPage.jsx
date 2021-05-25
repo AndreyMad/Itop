@@ -61,7 +61,7 @@ class UsersDetailPage extends Component {
   createProfileHandler = (profile) => {
     const { createProfile, token } = this.props;
     const { userPageShowwed } = this.state;
-    createProfile(profile, token, userPageShowwed.email);
+    createProfile(profile, token, userPageShowwed.id);
     this.setState({ isModalOpen: false });
   };
 
@@ -188,7 +188,7 @@ class UsersDetailPage extends Component {
               </div>
               <div className={style.cardContainer}>
                 {profiles.map((profile) => {
-                  if (profile.userEmail === userPageShowwed?.email) {
+                  if (profile.userId === userPageShowwed?.id) {
                     return (
                       <ProfileCard
                         deleteHandler={this.deleteHandler}

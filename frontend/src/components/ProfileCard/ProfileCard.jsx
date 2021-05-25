@@ -9,8 +9,6 @@ const ProfileCard = ({profile, showModal, deleteHandler}) => {
    const date = moment( profile.birthDate).format("DD.MM.YYYY")
 
    
-    // const fullFormatedDate = day.length>1?day:
-
     return (
         <div  className={style.cardWrapper}>
             <span>{profile.name}</span>
