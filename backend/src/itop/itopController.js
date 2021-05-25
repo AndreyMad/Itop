@@ -155,6 +155,7 @@ const getProfiles = async (req, res) => {
   if (dbResponse.error) {
     return res.status(200).send(dbResponse);
   }
+
   return res
     .status(200)
     .send({
@@ -166,7 +167,7 @@ const getProfiles = async (req, res) => {
           id: el.id,
           isGenderMale: el.isgendermale,
           name: el.name,
-          userEmail: el.useremail,
+          userId: el.userid,
           userName: el.username,
         })),
       ],

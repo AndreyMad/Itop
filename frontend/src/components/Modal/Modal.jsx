@@ -67,7 +67,7 @@ export default class Modal extends Component {
 
   render() {
     const { closeModal } = this.props;
-    const { name, isGenderMale, birthDate, city, id } = this.state;
+    const { name, isGenderMale, birthDate, city } = this.state;
 
     return (
       <><NotificationContainer/>

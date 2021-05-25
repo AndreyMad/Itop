@@ -56,8 +56,8 @@ const getUsers = async (token) => {
   const findUserByToken = await checkSession(token);
   const fullUserIndb = await findUserFromDb(findUserByToken.email);
   const query = fullUserIndb.isadmin
-    ? "SELECT id, email, isadmin, username FROM itoptestusers"
-    : `SELECT id, email, isadmin, username FROM itoptestusers where email='${fullUserIndb.email}'`;
+    ? "SELECT id, email, isadmin, id FROM itoptestusers"
+    : `SELECT id, email, isadmin, id FROM itoptestusers where email='${fullUserIndb.id}'`;
 
   return queryHandler(query)
     .then((res) => {
@@ -65,22 +65,23 @@ const getUsers = async (token) => {
     })
     .catch((err) => {
       console.log(err);
+      return err
     });
 };
 
 const createUser = async (user) => {
-  const { email, password, isAdmin, id, userName } = user;
+  const { email, password, isAdmin, id, userId } = user;
 
   const checkSameUser = await findUserFromDb(email);
   if (checkSameUser) {
     return { status: "ERROR", message: "That email allready registered" };
   }
-  const query = `insert into itoptestusers (email, password, isadmin, id, username) VALUES ('${email}', '${password}', '${isAdmin}', '${id}', '${userName}')`;
+  const query = `insert into itoptestusers (email, password, isadmin, id, userid) VALUES ('${email}', '${password}', '${isAdmin}', '${id}', '${userId}')`;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
       return { status: "NOT CREATED" };
     }
-    return { status: "SUCCES", user: { email, isAdmin, id, userName } };
+    return { status: "SUCCES", user: { email, isAdmin, id, userId } };
   });
 };
 
@@ -96,7 +97,7 @@ const updateUser = async (user, token) => {
     queryHandler(`update sessions set  email='${user.email}'  where token='${token}' `)
   }
 
-  const query = `update itoptestusers set email='${user.email}', username='${user.username}', isAdmin='${user.isadmin}' where id='${user.id}' `;
+  const query = `update itoptestusers set email='${user.email}', userid='${user.userId}', isAdmin='${user.isadmin}' where id='${user.id}' `;
 
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {
@@ -159,11 +160,11 @@ const createProfile = async (profile, token, email) => {
     return { status: "ERROR", message: "NO ACTIVE SESSION" };
   }
   const user = await findUserFromDb(findUserByToken.email);
-  const query = `insert into itoptestprofiles (id, useremail, birthdate, name, city, isgendermale, username) VALUES 
+  const query = `insert into itoptestprofiles (id, useremail, birthdate, name, city, isgendermale, userid) VALUES 
   ('${profile.id}', '${email || findUserByToken.email}', '${
     profile.birthDate
   }', '${profile.name}', '${profile.city}', '${profile.isGenderMale}', '${
-    user.username
+    user.userId
   }')`;
   return queryHandler(query).then((res) => {
     if (res.rowCount === 0) {

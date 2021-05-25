@@ -1,7 +1,6 @@
 import * as usersActions from "./usersActions";
 import * as API from "../../api/api";
 import * as authOperations from '../Auth/authOperations'
-import * as authActions from '../Auth/authActions'
 
 export const getUsers = (token) => (dispatch) => {
   dispatch(usersActions.getUsersStart(token));

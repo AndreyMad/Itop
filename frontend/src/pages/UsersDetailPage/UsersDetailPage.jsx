@@ -11,7 +11,7 @@ import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import Modal from "../../components/Modal/Modal";
 import UserEditModal from "../../components/UserEditModal/UserEditModal";
 import SubmitModal from "../../components/SubmitModal/SubmitModal";
-import { NavLink, Redirect } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import routes from "../../routes/routes";
 
 class UsersDetailPage extends Component {

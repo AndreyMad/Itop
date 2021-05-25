@@ -9,13 +9,10 @@ import style from "./UsersPage.module.css";
 class UsersPage extends Component {
   componentDidMount() {
     const { getProfiles, token, getUsers } = this.props;
-    if(token){
-   
+    if (token) {
       getProfiles(token);
       getUsers(token);
-   
     }
-  
   }
 
   render() {
@@ -26,7 +23,7 @@ class UsersPage extends Component {
         <ul className={style.cardContainer}>
           {users.map((user) => {
             const userProfiles = profiles?.filter(
-              (el) => el.userEmail === user.email
+              (el) => el.userId === user.id
             );
             const { match, location } = this.props;
 
@@ -39,8 +36,8 @@ class UsersPage extends Component {
                   to={{
                     pathname: `${match.url}/${user.id}`,
                     state: { from: { ...location } },
-                   
-                  }}                >
+                  }}
+                >
                   <p>{userProfiles?.length || 0} profiles</p>
                 </NavLink>
               </li>
