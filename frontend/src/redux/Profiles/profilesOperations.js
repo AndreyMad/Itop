@@ -3,7 +3,7 @@ import * as API from "../../api/api";
 
 export const getProfiles = (token) => (dispatch) => {
   dispatch(profilesActions.getProfilesStart());
-  
+
   API.getProfiles(token)
     .then((res) => {
       if (res.data.status === "ERROR") {
@@ -21,16 +21,15 @@ export const getProfiles = (token) => (dispatch) => {
 export const createProfile = (profile, token, creatorId) => (dispatch) => {
   dispatch(profilesActions.createProfileStart());
 
- return  API.createProfile(profile, token, creatorId)
+  return API.createProfile(profile, token, creatorId)
     .then((res) => {
       if (res.data.status === "ERROR") {
         dispatch(profilesActions.createProfileError(res.data.message));
-        return res.data.status
-
+        return res.data.status;
       }
       if (res.data.status === "SUCCES") {
         dispatch(profilesActions.createProfileSuccess(res.data.profile));
-        return res.data.status
+        return res.data.status;
       }
     })
     .catch((err) => {
@@ -38,19 +37,18 @@ export const createProfile = (profile, token, creatorId) => (dispatch) => {
     });
 };
 
-export const updateProfile = (profile,token) => (dispatch) => {
+export const updateProfile = (profile, token) => (dispatch) => {
   dispatch(profilesActions.updateProfileStart());
 
- return  API.updateProfile(profile, token)
+  return API.updateProfile(profile, token)
     .then((res) => {
       if (res.data.status === "ERROR") {
         dispatch(profilesActions.updateProfileError(res.data.message));
-        return res.data.status
-
+        return res.data.status;
       }
       if (res.data.status === "SUCCES") {
         dispatch(profilesActions.updateProfileSuccess(res.data.profile));
-        return res.data.status
+        return res.data.status;
       }
     })
     .catch((err) => {
@@ -61,17 +59,15 @@ export const updateProfile = (profile,token) => (dispatch) => {
 export const deleteProfile = (profile, token) => (dispatch) => {
   dispatch(profilesActions.deleteProfileStart());
 
- return  API.deleteProfile(profile, token)
+  return API.deleteProfile(profile, token)
     .then((res) => {
-     
       if (res.data.status === "ERROR") {
         dispatch(profilesActions.deleteProfileError(res.data.message));
-        return res.data.status
-
+        return res.data.status;
       }
       if (res.data.status === "SUCCES") {
         dispatch(profilesActions.deleteProfileSuccess(res.data.id));
-        return res.data.status
+        return res.data.status;
       }
     })
     .catch((err) => {

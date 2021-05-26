@@ -211,7 +211,9 @@ class UsersDetailPage extends Component {
             </section>
           </>
         ) : (
-          <NavLink className={style.userPageLink} to={routes.USERS_PAGE.path} >Back to users</NavLink>
+          <NavLink className={style.userPageLink} to={routes.USERS_PAGE.path}>
+            Back to users
+          </NavLink>
         )}
       </>
     );

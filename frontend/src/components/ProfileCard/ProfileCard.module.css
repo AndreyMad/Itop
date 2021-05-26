@@ -21,7 +21,7 @@
   transition: 500ms;
   transform: translate(-3px, -3px);
 }
-.cardWrapper span {
+.cardWrapper > span {
   margin: 20px auto 0px;
   margin-top: 20px;
 }
@@ -34,7 +34,10 @@
   border-radius: 0px 0px 10px 10px;
   border-top: 1px solid #000000;
 }
-
+.btnWrapper button:hover span,
+.btnWrapper button:hover img {
+  filter: invert(1);
+}
 .btnR,
 .btnL {
   display: flex;
@@ -60,8 +63,6 @@
 .btnR:hover {
   background: #624af2;
   cursor: pointer;
-
-  /* filter: invert(1); */
 }
 .btnL:hover {
   cursor: pointer;

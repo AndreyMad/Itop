@@ -17,11 +17,9 @@ export const getProfilesError = (error) => ({
   },
 });
 
-
 export const resetProfilesStore = () => ({
   type: types.RESET_PROFILES_STORE,
 });
-
 
 export const createProfileStart = () => ({
   type: types.CREATE_PROFILE_START,
@@ -39,7 +37,6 @@ export const createProfileError = (error) => ({
   },
 });
 
-
 export const updateProfileStart = () => ({
   type: types.UPDATE_PROFILE_START,
 });
@@ -55,7 +52,6 @@ export const updateProfileError = (error) => ({
     error,
   },
 });
-
 
 export const deleteProfileStart = () => ({
   type: types.DELETE_PROFILE_START,

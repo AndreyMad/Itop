@@ -20,23 +20,33 @@ class App extends Component {
     refresh();
   }
   componentDidUpdate(prevProps) {
-      if (prevProps.notifications !== this.props.notifications) {
-        const { notifications } = this.props;
-        if(!!notifications){
-          switch(notifications.type){
-          case 'warning':
-            return NotificationManager.warning(`${notifications.message}`,'',2000)
-          case 'success':
-              return NotificationManager.success(`${notifications.message}`,'',2000)
-          case 'error':
-            return NotificationManager.error(`${notifications.message}`,'',2000)
-          
-          default: return null
-          }
-     
+    if (prevProps.notifications !== this.props.notifications) {
+      const { notifications } = this.props;
+      if (!!notifications) {
+        switch (notifications.type) {
+          case "warning":
+            return NotificationManager.warning(
+              `${notifications.message}`,
+              "",
+              2000
+            );
+          case "success":
+            return NotificationManager.success(
+              `${notifications.message}`,
+              "",
+              2000
+            );
+          case "error":
+            return NotificationManager.error(
+              `${notifications.message}`,
+              "",
+              2000
+            );
+
+          default:
+            return null;
         }
-   
-      
+      }
     }
   }
 
@@ -85,13 +95,10 @@ const mSTP = (store) => ({
   isLoading: Selectors.getIsLoading(store),
   error: Selectors.getError(store),
   notifications: Selectors.getNotification(store),
-  
 });
 
 const mDTP = (dispatch) => ({
   refresh: () => dispatch(authOperations.refresh()),
-
-
 });
 
 export default connect(mSTP, mDTP)(App);

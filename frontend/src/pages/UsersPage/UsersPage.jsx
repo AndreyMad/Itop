@@ -22,10 +22,9 @@ class UsersPage extends Component {
         <h1>{users.length >= 1 ? "User:" : "Users:"}</h1>
         <ul className={style.cardContainer}>
           {users.map((user) => {
-              const userProfiles = profiles?.filter(
-              (el) => {
-               return el.userId === user.id}
-            );
+            const userProfiles = profiles?.filter((el) => {
+              return el.userId === user.id;
+            });
             const { match, location } = this.props;
 
             return (

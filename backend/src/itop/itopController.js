@@ -139,39 +139,35 @@ const deleteUser = async (req, res) => {
     return res.status(200).send({ status: "ERROR", error: dbResponse.error });
   }
 
-  return res
-    .status(200)
-    .send({
-      status: "SUCCES",
-      email: dbResponse.email,
-      sameUser: dbResponse.sameUser,
-    });
+  return res.status(200).send({
+    status: "SUCCES",
+    email: dbResponse.email,
+    sameUser: dbResponse.sameUser,
+  });
 };
 
 //PROFILES
 
 const getProfiles = async (req, res) => {
   const dbResponse = await db.getProfiles(req.body.token);
-  
+
   if (dbResponse.error) {
     return res.status(200).send(dbResponse);
   }
-  return res
-    .status(200)
-    .send({
-      status: "SUCCES",
-      profiles: [
-        ...dbResponse.map((el) => ({
-          birthDate: el.birthdate,
-          city: el.city,
-          id: el.id,
-          isGenderMale: el.isgendermale,
-          name: el.name,
-          userId: el.userid,
-          userName: el.username,
-        })),
-      ],
-    });
+  return res.status(200).send({
+    status: "SUCCES",
+    profiles: [
+      ...dbResponse.map((el) => ({
+        birthDate: el.birthdate,
+        city: el.city,
+        id: el.id,
+        isGenderMale: el.isgendermale,
+        name: el.name,
+        userId: el.userid,
+        userName: el.username,
+      })),
+    ],
+  });
 };
 
 const createProfile = async (req, res) => {
@@ -198,16 +194,18 @@ const updateProfile = async (req, res) => {
   if (dbResponse.status !== "SUCCES") {
     return res.status(400).send({ status: "ERROR", error: dbResponse.message });
   }
-  return res
-    .status(201)
-    .send({ status: "SUCCES", profile: {
-       birthDate: dbResponse.profile.birthdate,
+  return res.status(201).send({
+    status: "SUCCES",
+    profile: {
+      birthDate: dbResponse.profile.birthdate,
       city: dbResponse.profile.city,
       id: dbResponse.profile.id,
       isGenderMale: dbResponse.profile.isgendermale,
       name: dbResponse.profile.name,
       userId: dbResponse.profile.userid,
-      userName: dbResponse.profile.username} });
+      userName: dbResponse.profile.username,
+    },
+  });
 };
 
 const deleteProfile = async (req, res) => {

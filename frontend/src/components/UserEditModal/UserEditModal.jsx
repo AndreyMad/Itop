@@ -9,7 +9,6 @@ class UserEditModal extends Component {
     username: "",
     email: "",
     isadmin: false,
- 
   };
   componentDidMount() {
     this.setState({
@@ -35,11 +34,9 @@ class UserEditModal extends Component {
     updateUserHandler({ ...this.state });
   };
 
-
-
   render() {
-    const { username, email,  isadmin } = this.state;
-    const {closeUserEditModal}=this.props
+    const { username, email, isadmin } = this.state;
+    const { closeUserEditModal } = this.props;
     return (
       <div onClick={closeUserEditModal} className={style.overlay} id="overlay">
         <div className={style.container}>
@@ -61,30 +58,31 @@ class UserEditModal extends Component {
               label="Email"
             />
 
-            <div className={style.checkboxWrapper} htmlFor="gender">
-              <span>Role</span>
-              <label className={style.inputLabel} htmlFor="male">
-                <input
-                  onChange={this.checkboxToggle}
-                  checked={!isadmin}
-                  type="radio"
-                  id="user"
-                  className={style.checkbox}
-                ></input>
-                user
-              </label>
-              <label className={style.inputLabel} htmlFor="female">
-                <input
-                  onChange={this.checkboxToggle}
-                  checked={isadmin}
-                  type="radio"
-                  id="admin"
-                  className={style.checkbox}
-                ></input>
-                admin
-              </label>
-            </div>
-
+            {isadmin ? (
+              <div className={style.checkboxWrapper} htmlFor="gender">
+                <span>Role</span>
+                <label className={style.inputLabel} htmlFor="male">
+                  <input
+                    onChange={this.checkboxToggle}
+                    checked={!isadmin}
+                    type="radio"
+                    id="user"
+                    className={style.checkbox}
+                  ></input>
+                  user
+                </label>
+                <label className={style.inputLabel} htmlFor="female">
+                  <input
+                    onChange={this.checkboxToggle}
+                    checked={isadmin}
+                    type="radio"
+                    id="admin"
+                    className={style.checkbox}
+                  ></input>
+                  admin
+                </label>
+              </div>
+            ) : null}
             <div className={style.btnWrapper}>
               <button
                 className={style.formBtn}

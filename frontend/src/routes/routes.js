@@ -7,29 +7,56 @@ import ErrorPage from '../pages/ErrorPage/ErrorPage'
 import MainPage from '../pages/MainPage/MainPage'
 /* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 
+// export default {
+//   MAIN_PAGE: {
+//     path: "/",
+//     component: MainPage
+//   },
+//   USERS_PAGE:{
+//     path: "/users",
+//     component: UsersPage
+//   },  
+//   USERS_DETAIL_PAGE:{
+//     path: "/users/:id",
+//     component: UsersDetailPage
+//   },
+//   PROFILES_PAGE:{
+//     path: "/profiles",
+//     component: ProfilesPage
+//   },
+//   DASHBOARD_PAGE: {
+//     path: "/dashboard",
+//     component: DashboardPage
+//   },
+//   ERROR_PAGE: {
+//     path: `/error`,
+//     component: ErrorPage
+//   }
+// };
+
 export default {
   MAIN_PAGE: {
-    path: "/",
+    path: "/itop/",
     component: MainPage
   },
   USERS_PAGE:{
-    path: "/users",
+    path: "/itop/users",
     component: UsersPage
   },  
   USERS_DETAIL_PAGE:{
-    path: "/users/:id",
+    path: "/itop/users/:id",
     component: UsersDetailPage
   },
   PROFILES_PAGE:{
-    path: "/profiles",
+    path: "/itop/profiles",
     component: ProfilesPage
   },
   DASHBOARD_PAGE: {
-    path: "/dashboard",
+    path: "/itop/dashboard",
     component: DashboardPage
   },
   ERROR_PAGE: {
-    path: `/error`,
+    path: `/itop/error`,
     component: ErrorPage
   }
 };

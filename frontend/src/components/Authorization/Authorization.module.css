@@ -57,17 +57,17 @@
 .switchBtn:hover {
   cursor: pointer;
 }
-.checkboxLabel{
+.checkboxLabel {
   margin-top: 15px;
 }
-.checkboxLabel:hover,.checkbox:hover {
+.checkboxLabel:hover,
+.checkbox:hover {
   cursor: pointer;
 }
 
 .checkbox {
- visibility: hidden;
+  visibility: hidden;
   position: relative;
-
 }
 .checkbox::before {
   content: "";
@@ -82,7 +82,7 @@
   left: -20px;
   top: -3px;
 }
-.checkbox:checked::after{
+.checkbox:checked::after {
   content: "";
   opacity: 1;
   visibility: visible;

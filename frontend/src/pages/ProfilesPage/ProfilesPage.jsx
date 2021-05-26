@@ -6,21 +6,19 @@ import style from "./ProfilesPage.module.css";
 import Modal from "../../components/Modal/Modal";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 
-
 class ProfilesPage extends Component {
   state = {
     isModalOpen: false,
     profileToEdit: {},
   };
 
-
   closeModal = (e) => {
     window.removeEventListener("keydown", this.closeModal);
     if (
       e?.code === "Escape" ||
       e.target.id === "overlay" ||
-      e.target.id === "closeBtn"||
-      e.target.name=== "closeimg"
+      e.target.id === "closeBtn" ||
+      e.target.name === "closeimg"
     ) {
       this.setState({ isModalOpen: false });
     }
@@ -33,17 +31,17 @@ class ProfilesPage extends Component {
 
   createProfileHandler = (profile) => {
     const { createProfile, token } = this.props;
-    createProfile(profile, token)
-    this.setState({isModalOpen:false})
+    createProfile(profile, token);
+    this.setState({ isModalOpen: false });
   };
 
   updateProfileHandler = (profile) => {
     const { updateProfile, token } = this.props;
     updateProfile(profile, token).then((res) => {
-      this.setState({ isModalOpen: false ,profileToEdit:{}});
+      this.setState({ isModalOpen: false, profileToEdit: {} });
     });
   };
-  
+
   deleteHandler = (id) => {
     const { deleteProfile, token } = this.props;
     deleteProfile(id, token).then((res) => {
@@ -63,7 +61,6 @@ class ProfilesPage extends Component {
               profileToEdit={profileToEdit}
               createProfileHandler={this.createProfileHandler}
               closeModal={this.closeModal}
-             
             />
           ) : null}
           <h2>Profiles:</h2>

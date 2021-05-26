@@ -10,9 +10,3 @@ export const getProfiles = store => store.profiles;
 
 export const getNotification = store=>store.notification
 
-// export const getFilter = store => store.users.filter;
-
-// export const filteredContacts = createSelector(
-//   [getContacts, getFilter],
-//   (contacts, filter) => contacts.filter(el => el.name.includes(filter))
-// );
